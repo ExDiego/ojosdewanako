@@ -1,0 +1,785 @@
+/*
+ * ================================================================
+ *  OJOS DE WANAKO — Hoja de estilos compartida
+ *  styles.css
+ *
+ *  Instrucciones de uso:
+ *  Enlazar en el <head> de CADA página, antes de cualquier
+ *  <style> propio de la página:
+ *
+ *  <link rel="stylesheet" href="styles.css">
+ *
+ *  Contenido de este archivo:
+ *  1. Variables CSS (paleta, tipografía, espaciado)
+ *  2. Alto contraste
+ *  3. Reset y base
+ *  4. Accesibilidad (skip link, focus, sr-only)
+ *  5. Barra de accesibilidad
+ *  6. Header y navegación
+ *  7. Cabecera de páginas interiores
+ *  8. Contenido general (secciones, títulos)
+ *  9. Nota de accesibilidad
+ *  10. Botones
+ *  11. Footer
+ *  12. Responsive
+ *
+ *  Lo que NO está aquí (va en el <style> de cada página):
+ *  — index.html     → hero, obras-grid, obra-card
+ *  — ojos-de-wanako → pdf-viewer, audio-player
+ *  — rio-de-arriba  → player, chapter-list, version-toggle
+ * ================================================================
+ */
+
+
+/* ================================================================
+   1. VARIABLES CSS
+   Un solo lugar para cambiar colores, fuentes y tamaños
+   en todo el sitio.
+================================================================ */
+:root {
+  /* --- Paleta de colores --- */
+  --color-azul-mar:   #014466;
+  --color-azul-noche: #233149;
+  --color-celeste:    #c9e0eb;
+  --color-ciruela:    #765569;
+  --color-dorado:     #e4b45c;
+  --color-crema:      #eee5ca;
+
+  /* --- Roles semánticos ---
+     Usa siempre estos en el CSS, no los colores directos.
+     Así el modo alto contraste funciona automáticamente. */
+  --bg-primary:   var(--color-crema);
+  --bg-secondary: var(--color-celeste);
+  --bg-dark:      var(--color-azul-noche);
+  --bg-accent:    var(--color-azul-mar);
+
+  --text-primary:  var(--color-azul-noche);
+  --text-on-dark:  var(--color-crema);
+  --text-accent:   var(--color-dorado);
+  --text-muted:    var(--color-ciruela);
+
+  --border-color: rgba(35, 49, 73, 0.15);
+  --focus-color:  var(--color-dorado);
+
+  /* --- Tipografía --- */
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body:    'DM Sans', system-ui, sans-serif;
+
+  /* --- Escala de texto en rem ---
+     El usuario puede cambiar el tamaño base desde su navegador
+     y todo el sitio escala proporcionalmente. */
+  --font-size-base: 1rem;       /* 16px */
+  --font-size-sm:   0.875rem;   /* 14px */
+  --font-size-lg:   1.125rem;   /* 18px */
+  --font-size-xl:   1.5rem;     /* 24px */
+  --font-size-2xl:  2rem;       /* 32px */
+  --font-size-3xl:  2.75rem;    /* 44px */
+
+  /* --- Espaciado --- */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2.5rem;
+  --space-xl: 4rem;
+
+  /* --- Miscelánea --- */
+  --radius:     4px;
+  --radius-lg:  8px;
+  --transition: 200ms ease;
+  --max-width:  1100px;
+}
+
+
+/* ================================================================
+   2. ALTO CONTRASTE
+   Se activa añadiendo la clase .high-contrast al <body>
+   mediante el botón de la barra de accesibilidad.
+   Solo redefine las variables — todo el CSS se actualiza solo.
+================================================================ */
+body.high-contrast {
+  --bg-primary:   #000000;
+  --bg-secondary: #111111;
+  --bg-dark:      #000000;
+  --bg-accent:    #000000;
+
+  --text-primary:  #ffffff;
+  --text-on-dark:  #ffffff;
+  --text-accent:   #ffff00;
+  --text-muted:    #ffffff;
+
+  --border-color: #ffffff;
+  --focus-color:  #ffff00;
+}
+
+
+/* ================================================================
+   3. RESET Y BASE
+================================================================ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: var(--font-size-base);
+  scroll-behavior: smooth;
+}
+
+/* Tamaños de texto alternativos — activan con el botón A+ */
+html.text-large  { font-size: 1.2rem; }
+html.text-xlarge { font-size: 1.4rem; }
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  line-height: 1.7;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  transition: background-color var(--transition), color var(--transition);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: var(--color-azul-mar);
+  transition: color var(--transition);
+}
+
+a:hover {
+  color: var(--color-ciruela);
+}
+
+
+/* ================================================================
+   4. ACCESIBILIDAD BASE
+
+   IMPORTANTE: No eliminar ni sobreescribir estas reglas.
+   Son la base que hace el sitio navegable por teclado
+   y compatible con lectores de pantalla.
+================================================================ */
+
+/* Focus visible — indica dónde está el foco al navegar con Tab.
+   Sin esto, los usuarios de teclado no saben dónde están. */
+:focus-visible {
+  outline: 3px solid var(--focus-color);
+  outline-offset: 3px;
+  border-radius: var(--radius);
+}
+
+/* Skip link — lo primero del <body> en cada página.
+   Invisible para el mouse, aparece al presionar Tab.
+   Permite a usuarios de teclado saltar directo al contenido. */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: var(--space-sm);
+  z-index: 9999;
+  background: var(--color-dorado);
+  color: var(--color-azul-noche);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: var(--font-size-base);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: 0 0 var(--radius) var(--radius);
+  text-decoration: none;
+  transition: top var(--transition);
+}
+
+.skip-link:focus {
+  top: 0;
+  outline: 3px solid var(--color-azul-noche);
+}
+
+/* Visualmente oculto pero legible por lectores de pantalla.
+   Usar para texto descriptivo que no debe verse en pantalla. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+
+/* ================================================================
+   5. BARRA DE ACCESIBILIDAD
+   Aparece en la parte superior de cada página con los controles
+   de tamaño de texto y alto contraste.
+================================================================ */
+.a11y-bar {
+  background: var(--bg-dark);
+  padding: var(--space-xs) var(--space-sm);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-xs);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  flex-wrap: wrap;
+}
+
+.a11y-bar__label {
+  font-size: var(--font-size-sm);
+  color: var(--text-on-dark);
+  margin-right: var(--space-xs);
+  opacity: 0.7;
+}
+
+/* Botones de la barra de accesibilidad.
+   También se usan en el visor de PDF como botones de control. */
+.a11y-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: var(--text-on-dark);
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  padding: 4px 12px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background var(--transition), border-color var(--transition);
+  white-space: nowrap;
+}
+
+.a11y-btn:hover,
+.a11y-btn[aria-pressed="true"] {
+  background: var(--color-dorado);
+  color: var(--color-azul-noche);
+  border-color: var(--color-dorado);
+}
+
+.a11y-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.a11y-btn:disabled:hover {
+  background: transparent;
+  color: var(--text-on-dark);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+
+/* ================================================================
+   6. HEADER Y NAVEGACIÓN PRINCIPAL
+   Menú hamburguesa siempre visible — desktop y móvil.
+================================================================ */
+.site-header {
+  background: var(--bg-dark);
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.nav-container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--space-sm) var(--space-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  position: relative;
+}
+
+/* Logo */
+.site-logo {
+  font-family: var(--font-display);
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  color: var(--text-on-dark);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  flex-shrink: 0;
+}
+
+.site-logo span {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-family: var(--font-body);
+  font-weight: 300;
+  color: var(--color-dorado);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.site-logo:hover { color: var(--color-crema); }
+
+/* ---------------------------------------------------------------
+   Botón hamburguesa — siempre visible en desktop y móvil
+--------------------------------------------------------------- */
+.nav-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: var(--text-on-dark);
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 8px 14px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background var(--transition), border-color var(--transition);
+  flex-shrink: 0;
+}
+
+.nav-toggle:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.nav-toggle[aria-expanded="true"] {
+  background: var(--color-dorado);
+  border-color: var(--color-dorado);
+  color: var(--color-azul-noche);
+}
+
+/* Icono de tres líneas — animado a X al abrir */
+.hamburger-icon {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 20px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.hamburger-icon span {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: currentColor;
+  border-radius: 2px;
+  transition:
+    transform 250ms ease,
+    opacity   250ms ease,
+    width     250ms ease;
+  transform-origin: center;
+}
+
+/* Animación ☰ → ✕ */
+.nav-toggle[aria-expanded="true"] .hamburger-icon span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.nav-toggle[aria-expanded="true"] .hamburger-icon span:nth-child(2) {
+  opacity: 0;
+  width: 0;
+}
+
+.nav-toggle[aria-expanded="true"] .hamburger-icon span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ---------------------------------------------------------------
+   Panel del menú desplegable
+   Aparece como dropdown bajo el header al hacer clic
+--------------------------------------------------------------- */
+.nav-menu {
+  display: none; /* oculto por defecto en TODOS los tamaños */
+  position: absolute;
+  top: calc(100% + 1px);
+  right: 0;
+  width: min(360px, 100vw);
+  background: var(--color-azul-noche);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 2px solid var(--color-dorado);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+  list-style: none;
+  padding: var(--space-xs) 0;
+  z-index: 200;
+}
+
+.nav-menu.is-open {
+  display: block;
+}
+
+.nav-menu li {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.nav-menu li:last-child {
+  border-bottom: none;
+}
+
+.nav-menu a {
+  display: block;
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  font-weight: 400;
+  color: var(--color-celeste);
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 14px var(--space-md);
+  transition: background var(--transition), color var(--transition), padding-left var(--transition);
+}
+
+.nav-menu a:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-dorado);
+  padding-left: calc(var(--space-md) + 6px);
+}
+
+.nav-menu a[aria-current="page"] {
+  color: var(--color-dorado);
+  border-left: 3px solid var(--color-dorado);
+  padding-left: calc(var(--space-md) - 3px);
+  background: rgba(228, 180, 92, 0.08);
+}
+
+/* Overlay oscuro detrás del menú para cerrar al hacer clic fuera */
+.nav-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  background: rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+
+.nav-overlay.is-open {
+  display: block;
+}
+
+
+/* ================================================================
+   7. CABECERA DE PÁGINAS INTERIORES
+   Usada en ojos-de-wanako.html, rio-de-arriba.html
+   y en cualquier página interior que se cree en el futuro.
+   (El index usa .hero en su lugar.)
+================================================================ */
+.page-header {
+  background: var(--bg-accent);
+  color: var(--text-on-dark);
+  padding: var(--space-lg) var(--space-md);
+  text-align: center;
+}
+
+.page-header__container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+.page-header__eyebrow {
+  font-size: var(--font-size-sm);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-dorado);
+  margin-bottom: var(--space-xs);
+}
+
+.page-header__title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 600;
+  color: var(--color-crema);
+  margin-bottom: var(--space-sm);
+}
+
+.page-header__description {
+  font-size: var(--font-size-lg);
+  font-weight: 300;
+  max-width: 640px;
+  margin: 0 auto;
+  color: var(--color-celeste);
+  line-height: 1.8;
+}
+
+/* Badges de accesibilidad — usados en rio-de-arriba */
+.a11y-badges {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+  margin-top: var(--space-md);
+}
+
+.a11y-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-sm);
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--color-celeste);
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+
+/* ================================================================
+   8. CONTENIDO GENERAL — secciones y texto
+   Estructura compartida para todas las páginas interiores.
+================================================================ */
+.main-content {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-md);
+}
+
+.section {
+  margin-bottom: var(--space-xl);
+}
+
+/* Etiqueta pequeña sobre el título de sección */
+.section__label {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-ciruela);
+  margin-bottom: var(--space-xs);
+}
+
+.section__title {
+  font-family: var(--font-display);
+  font-size: var(--font-size-2xl);
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.2;
+  margin-bottom: var(--space-sm);
+}
+
+.section__body {
+  font-size: var(--font-size-base);
+  line-height: 1.8;
+  color: var(--text-primary);
+  max-width: 680px;
+  margin-bottom: var(--space-md);
+}
+
+
+/* ================================================================
+   9. NOTA DE ACCESIBILIDAD
+   Caja de aviso para orientar a usuarios sobre alternativas
+   accesibles. Usada en ojos-de-wanako y rio-de-arriba.
+================================================================ */
+.a11y-note {
+  background: var(--bg-secondary);
+  border-left: 4px solid var(--color-azul-mar);
+  border-radius: var(--radius);
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--font-size-sm);
+  line-height: 1.7;
+  color: var(--text-primary);
+  margin-top: var(--space-sm);
+}
+
+.a11y-note strong {
+  color: var(--color-azul-mar);
+}
+
+body.high-contrast .a11y-note {
+  border-left-color: var(--text-accent);
+}
+
+body.high-contrast .a11y-note strong {
+  color: var(--text-accent);
+}
+
+
+/* ================================================================
+   10. BOTONES
+   Usados en todas las páginas.
+================================================================ */
+.btn {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.75rem 1.75rem;
+  border-radius: var(--radius);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition:
+    background var(--transition),
+    color var(--transition),
+    border-color var(--transition);
+}
+
+/* Botón principal — dorado sobre azul noche */
+.btn--primary {
+  background: var(--color-azul-noche);
+  color: var(--color-crema);
+  border-color: var(--color-azul-noche);
+}
+
+.btn--primary:hover {
+  background: var(--color-crema);
+  border-color: var(--color-crema);
+  color: var(--color-azul-noche);
+}
+
+/* Botón secundario — contorno, sin relleno */
+.btn--outline {
+  background: transparent;
+  color: var(--color-azul-mar);
+  border-color: var(--color-azul-mar);
+}
+
+.btn--outline:hover {
+  background: var(--color-azul-mar);
+  color: var(--color-crema);
+}
+
+/* Variante sobre fondo oscuro */
+.btn--outline-light {
+  background: transparent;
+  color: var(--color-crema);
+  border-color: rgba(238, 229, 202, 0.5);
+}
+
+.btn--outline-light:hover {
+  background: rgba(238, 229, 202, 0.1);
+  border-color: var(--color-crema);
+  color: var(--color-crema);
+}
+
+
+/* ================================================================
+   11. FOOTER
+================================================================ */
+.site-footer {
+  background: var(--bg-dark);
+  color: var(--text-on-dark);
+  padding: var(--space-lg) var(--space-md);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.footer-container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: var(--space-lg);
+}
+
+.footer__brand {
+  font-family: var(--font-display);
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  color: var(--color-crema);
+  margin-bottom: var(--space-xs);
+}
+
+.footer__tagline {
+  font-size: var(--font-size-sm);
+  color: var(--color-celeste);
+  line-height: 1.7;
+  margin-bottom: var(--space-sm);
+}
+
+.footer__heading {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-dorado);
+  margin-bottom: var(--space-sm);
+}
+
+.footer__links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.footer__links a {
+  font-size: var(--font-size-sm);
+  color: var(--color-celeste);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+.footer__links a:hover {
+  color: var(--color-dorado);
+}
+
+.footer__bottom {
+  max-width: var(--max-width);
+  margin: var(--space-lg) auto 0;
+  padding-top: var(--space-sm);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  font-size: var(--font-size-sm);
+  color: rgba(238, 229, 202, 0.5);
+}
+
+.footer__bottom a {
+  color: var(--color-celeste);
+  font-size: var(--font-size-sm);
+}
+
+
+/* ================================================================
+   12. RESPONSIVE
+
+   Breakpoints:
+   — 900px: layouts de dos columnas pasan a una
+   — 768px: footer pasa a una columna
+   — 600px: menú hamburguesa activo
+================================================================ */
+
+/* Tablets */
+@media (max-width: 768px) {
+  .footer-container {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  .footer__bottom {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .a11y-bar {
+    justify-content: center;
+  }
+
+  .a11y-bar__label {
+    width: 100%;
+    text-align: center;
+    margin-right: 0;
+  }
+}
+
+/* Móvil — el panel del menú ocupa todo el ancho */
+@media (max-width: 600px) {
+  .nav-menu {
+    width: 100%;
+    border-radius: 0;
+    right: 0;
+    left: 0;
+  }
+
+  /* Ocultar texto "Menú" en pantallas muy pequeñas, dejar solo el icono */
+  .nav-toggle__label {
+    display: none;
+  }
+}

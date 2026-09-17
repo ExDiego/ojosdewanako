@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Material Interactivo — Ojos de Wanako</title>
+  <meta name="description" content="Materiales interactivos descargables sobre la tradición oral andina y la observación del cielo nocturno.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../styles.css">
+
+  <style>
+    /* ============================================================
+       ESTILOS ESPECÍFICOS DE MATERIAL INTERACTIVO
+    ============================================================ */
+
+    /* Contenedor de la lista de materiales */
+    .materials-container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: var(--space-xl) var(--space-md);
+    }
+
+    /* Panel oscuro que envuelve la lista — igual que en la maqueta */
+    .materials-panel {
+      background: var(--bg-dark);
+      border-radius: var(--radius-lg);
+      padding: var(--space-md);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* Fila de cada material */
+    .material-row {
+      background: var(--color-crema);
+      border-radius: var(--radius);
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-sm) var(--space-md);
+      transition: background var(--transition);
+    }
+
+    .material-row:hover {
+      background: #f5dca8; /* crema ligeramente más cálido al hover */
+    }
+
+    /* Nombre del archivo */
+    .material-name {
+      font-family: var(--font-body);
+      font-size: var(--font-size-base);
+      font-weight: 500;
+      color: var(--color-azul-noche);
+      letter-spacing: 0.01em;
+      /* Truncar si es muy largo */
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Botones de acción */
+    .material-actions {
+      display: flex;
+      gap: var(--space-sm);
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .material-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-body);
+      font-size: var(--font-size-sm);
+      font-weight: 500;
+      color: var(--color-azul-noche);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      padding: 6px 10px;
+      border-radius: var(--radius);
+      transition: background var(--transition), color var(--transition);
+      white-space: nowrap;
+    }
+
+    .material-btn:hover {
+      background: rgba(1, 68, 102, 0.1);
+      color: var(--color-azul-mar);
+    }
+
+    /* Íconos SVG dentro de los botones */
+    .material-btn svg {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      fill: currentColor;
+    }
+
+    /* Separador vertical entre botones */
+    .material-divider {
+      width: 1px;
+      height: 20px;
+      background: rgba(1, 68, 102, 0.2);
+      flex-shrink: 0;
+    }
+
+    /* Estado vacío — cuando no hay archivos aún */
+    .materials-empty {
+      text-align: center;
+      padding: var(--space-xl) var(--space-md);
+      color: var(--color-celeste);
+      font-size: var(--font-size-base);
+    }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (max-width: 600px) {
+      .material-row {
+        grid-template-columns: 1fr;
+        gap: var(--space-xs);
+      }
+
+      .material-actions {
+        justify-content: flex-end;
+      }
+
+      .material-name {
+        white-space: normal;
+        word-break: break-word;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="#contenido-principal" class="skip-link">Saltar al contenido principal</a>
+
+  <div class="nav-overlay" id="nav-overlay" aria-hidden="true" onclick="closeMenu()"></div>
+
+  <div role="region" aria-label="Opciones de accesibilidad" class="a11y-bar">
+    <span class="a11y-bar__label" aria-hidden="true">Accesibilidad:</span>
+    <button class="a11y-btn" id="btn-texto" aria-pressed="false" aria-label="Aumentar tamaño del texto" onclick="toggleTextSize()">A+</button>
+    <button class="a11y-btn" id="btn-contraste" aria-pressed="false" aria-label="Activar modo de alto contraste" onclick="toggleContrast()">◑ Contraste</button>
+  </div>
+
+  <header class="site-header" role="banner">
+    <nav class="nav-container" aria-label="Navegación principal">
+      <a href="/" class="site-logo" aria-label="Ojos de Wanako - ir al inicio">
+        Ojos de Wanako
+        <span>Tradición oral andina</span>
+      </a>
+      <button class="nav-toggle" id="nav-toggle" aria-controls="nav-menu" aria-expanded="false" aria-label="Abrir menú de navegación" onclick="toggleMenu()">
+        <span class="hamburger-icon" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </span>
+        <span class="nav-toggle__label">Menú</span>
+      </button>
+      <ul class="nav-menu" id="nav-menu" role="list">
+        <li><a href="/">Inicio</a></li>
+        <li><a href="/ojos-de-wanako/">Ojos de Wanako</a></li>
+        <li><a href="/rio-de-arriba/">Río de Arriba</a></li>
+        <li><a href="/aprende-jugando/">¡Aprende Jugando!</a></li>
+        <li><a href="/material-interactivo/" aria-current="page">Material Interactivo</a></li>
+        <li><a href="/catalogo-artistico/">Catálogo Artístico</a></li>
+        <li><a href="/uniendo-naciones/">Uniendo Naciones</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="contenido-principal" tabindex="-1">
+
+    <header class="page-header">
+      <div class="page-header__container">
+        <p class="page-header__eyebrow">Recursos descargables</p>
+        <!-- ✅ El título está en minúsculas en el HTML.
+             El CSS aplica text-transform:uppercase visualmente.
+             Así el lector de pantalla lo pronuncia como palabra,
+             no lo deletrea letra a letra. -->
+        <h1 class="page-header__title page-header__title--caps">Material Interactivo</h1>
+        <p class="page-header__description">
+          Documentos y recursos sobre la tradición oral andina y la observación del cielo nocturno. Disponibles para ver en línea o descargar.
+        </p>
+      </div>
+    </header>
+
+    <section class="materials-container" aria-labelledby="materiales-titulo">
+      <h2 id="materiales-titulo" class="sr-only">Lista de materiales disponibles</h2>
+
+      <div class="materials-panel" id="materials-panel">
+        <!-- Generado por JavaScript — ver array "materiales" más abajo -->
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-container">
+      <div>
+        <p class="footer__brand">Ojos de Wanako</p>
+        <p class="footer__tagline">Difusión y visibilización de expresiones artísticas y saberes ancestrales andinos. Acceso equitativo, inclusivo y transnacional.</p>
+      </div>
+      <nav aria-label="Las obras">
+        <h2 class="footer__heading">Las obras</h2>
+        <ul class="footer__links" role="list">
+          <li><a href="/ojos-de-wanako/">Ojos de Wanako</a></li>
+          <li><a href="/rio-de-arriba/">Río de Arriba</a></li>
+          <li><a href="/catalogo-artistico/">Catálogo Artístico</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Explora">
+        <h2 class="footer__heading">Explora</h2>
+        <ul class="footer__links" role="list">
+          <li><a href="/aprende-jugando/">¡Aprende Jugando!</a></li>
+          <li><a href="/material-interactivo/">Material Interactivo</a></li>
+          <li><a href="/uniendo-naciones/">Uniendo Naciones</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer__bottom">
+      <p>Este sitio cumple con los criterios WCAG 2.1 nivel AA</p>
+      <a href="/accesibilidad/">Declaración de accesibilidad</a>
+    </div>
+  </footer>
+
+  <script>
+    /* ============================================================
+       LISTA DE MATERIALES
+       👉 Reemplaza los nombres y rutas con los archivos reales.
+          Cada objeto tiene:
+          - nombre:     texto que se muestra en la fila
+          - archivo:    ruta al PDF dentro de ../assets/
+          - descripcion: texto alternativo para el lector de pantalla
+    ============================================================ */
+    const materiales = [
+      {
+        nombre:      "Material_Interactivo_01.pdf",
+        archivo:     "../assets/material-interactivo-01.pdf",
+        descripcion: "Material Interactivo número 1"
+      },
+      {
+        nombre:      "Material_Interactivo_02.pdf",
+        archivo:     "../assets/material-interactivo-02.pdf",
+        descripcion: "Material Interactivo número 2"
+      },
+      {
+        nombre:      "Material_Interactivo_03.pdf",
+        archivo:     "../assets/material-interactivo-03.pdf",
+        descripcion: "Material Interactivo número 3"
+      },
+      {
+        nombre:      "Material_Interactivo_04.pdf",
+        archivo:     "../assets/material-interactivo-04.pdf",
+        descripcion: "Material Interactivo número 4"
+      },
+      {
+        nombre:      "Material_Interactivo_05.pdf",
+        archivo:     "../assets/material-interactivo-05.pdf",
+        descripcion: "Material Interactivo número 5"
+      },
+      {
+        nombre:      "Material_Interactivo_06.pdf",
+        archivo:     "../assets/material-interactivo-06.pdf",
+        descripcion: "Material Interactivo número 6"
+      },
+    ];
+
+    /* ============================================================
+       ÍCONOS SVG
+       aria-hidden="true" en todos — el texto del botón
+       ya describe la acción al lector de pantalla.
+    ============================================================ */
+    const iconoVer = `
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zm0 12.5a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
+      </svg>`;
+
+    const iconoDescarga = `
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M19 9h-4V3H9v6H5l7 7 7-7zm-14 9v2h14v-2H5z"/>
+      </svg>`;
+
+    /* ============================================================
+       CONSTRUIR LA LISTA
+    ============================================================ */
+    function buildMaterialsList() {
+      const panel = document.getElementById('materials-panel');
+
+      if (materiales.length === 0) {
+        panel.innerHTML = `<p class="materials-empty">Los materiales estarán disponibles próximamente.</p>`;
+        return;
+      }
+
+      materiales.forEach(mat => {
+        const row = document.createElement('div');
+        row.className = 'material-row';
+
+        row.innerHTML = `
+          <span class="material-name">${mat.nombre}</span>
+          <div class="material-actions">
+            <!-- ✅ aria-label incluye el nombre del archivo:
+                 el lector dice "Ver Material_Interactivo_01.pdf, enlace"
+                 en vez de solo "Ver, enlace" -->
+            <a
+              href="${mat.archivo}"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="material-btn"
+              aria-label="Ver ${mat.descripcion} (se abre en nueva pestaña)"
+            >
+              ${iconoVer}
+              Ver
+            </a>
+            <div class="material-divider" aria-hidden="true"></div>
+            <a
+              href="${mat.archivo}"
+              download
+              class="material-btn"
+              aria-label="Descargar ${mat.descripcion}"
+            >
+              ${iconoDescarga}
+              Descarga
+            </a>
+          </div>
+        `;
+
+        panel.appendChild(row);
+      });
+    }
+
+    /* ============================================================
+       NAVEGACIÓN
+    ============================================================ */
+    function toggleMenu() {
+      const menu    = document.getElementById('nav-menu');
+      const toggle  = document.getElementById('nav-toggle');
+      const overlay = document.getElementById('nav-overlay');
+      const isOpen  = menu.classList.toggle('is-open');
+      overlay.classList.toggle('is-open', isOpen);
+      toggle.setAttribute('aria-expanded', isOpen);
+      toggle.setAttribute('aria-label', isOpen ? 'Cerrar menú de navegación' : 'Abrir menú de navegación');
+    }
+
+    function closeMenu() {
+      const menu    = document.getElementById('nav-menu');
+      const toggle  = document.getElementById('nav-toggle');
+      const overlay = document.getElementById('nav-overlay');
+      menu.classList.remove('is-open');
+      overlay.classList.remove('is-open');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'Abrir menú de navegación');
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+
+    /* ============================================================
+       ACCESIBILIDAD — tamaño de texto y contraste
+    ============================================================ */
+    const textSizes = ['', 'text-large', 'text-xlarge'];
+    let textIndex = 0;
+
+    function toggleTextSize() {
+      const html = document.documentElement;
+      const btn  = document.getElementById('btn-texto');
+      if (textSizes[textIndex]) html.classList.remove(textSizes[textIndex]);
+      textIndex = (textIndex + 1) % textSizes.length;
+      if (textSizes[textIndex]) html.classList.add(textSizes[textIndex]);
+      btn.setAttribute('aria-pressed', textIndex !== 0);
+      localStorage.setItem('textSize', textIndex);
+    }
+
+    function toggleContrast() {
+      const isOn = document.body.classList.toggle('high-contrast');
+      document.getElementById('btn-contraste').setAttribute('aria-pressed', isOn);
+      localStorage.setItem('highContrast', isOn);
+    }
+
+    (function restorePreferences() {
+      const savedText     = localStorage.getItem('textSize');
+      const savedContrast = localStorage.getItem('highContrast');
+      if (savedText && savedText !== '0') {
+        textIndex = parseInt(savedText);
+        if (textSizes[textIndex]) {
+          document.documentElement.classList.add(textSizes[textIndex]);
+          document.getElementById('btn-texto').setAttribute('aria-pressed', 'true');
+        }
+      }
+      if (savedContrast === 'true') {
+        document.body.classList.add('high-contrast');
+        document.getElementById('btn-contraste').setAttribute('aria-pressed', 'true');
+      }
+    })();
+
+    /* Inicializar */
+    buildMaterialsList();
+  </script>
+
+</body>
+</html>
