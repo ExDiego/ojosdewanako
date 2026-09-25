@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ojos de Wanako — Libro digital y versión en audio</title>
+  <meta name="description" content="Lee el libro Ojos de Wanako en versión digital o escucha su versión narrada en audio. Accesible y disponible para descarga.">
+  <meta property="og:title" content="Ojos de Wanako — Libro digital">
+  <meta property="og:description" content="Tradición oral andina y el cielo nocturno, en versión digital y en audio.">
+  <meta property="og:type" content="website">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <!-- Hoja de estilos compartida — un nivel arriba -->
+  <link rel="stylesheet" href="../styles.css">
+
+  <style>
+    /* ============================================================
+       ESTILOS ESPECÍFICOS DE OJOS DE WANAKO
+       Solo lo que es único de esta página.
+       Todo lo compartido está en ../styles.css
+    ============================================================ */
+
+    /* VISOR DE PDF */
+    .pdf-viewer {
+      background: var(--bg-dark);
+      border-radius: var(--radius);
+      overflow: hidden;
+      max-width: 680px;
+      margin-bottom: var(--space-sm);
+    }
+
+    .pdf-viewer__toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      flex-wrap: wrap;
+      padding: var(--space-sm);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .pdf-viewer__page-info {
+      font-size: var(--font-size-sm);
+      color: var(--text-on-dark);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pdf-viewer__page-info input[type="number"] {
+      width: 3.5rem;
+      text-align: center;
+      font-size: var(--font-size-sm);
+      font-family: var(--font-body);
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: var(--text-on-dark);
+      border-radius: var(--radius);
+      padding: 4px;
+    }
+
+    .pdf-viewer__zoom { display: flex; gap: 4px; }
+
+    .pdf-viewer__canvas-wrap {
+      background: #0d1620;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-md);
+      min-height: 400px;
+      overflow: auto;
+      position: relative;
+    }
+
+    .pdf-viewer__canvas-wrap:focus-visible {
+      outline: 3px solid var(--color-dorado);
+      outline-offset: -3px;
+    }
+
+    #pdf-canvas {
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      max-width: 100%;
+    }
+
+    .pdf-viewer__loading {
+      color: var(--color-celeste);
+      font-size: var(--font-size-sm);
+      text-align: center;
+      padding: var(--space-lg);
+    }
+
+    .pdf-viewer__fallback { margin-bottom: var(--space-lg); }
+
+    /* REPRODUCTOR DE AUDIO */
+    .audio-player {
+      max-width: 680px;
+      background: var(--bg-secondary);
+      border-radius: var(--radius);
+      padding: var(--space-md);
+      margin-bottom: var(--space-sm);
+    }
+
+    .audio-player audio { width: 100%; }
+
+    .audio-player__caption {
+      font-size: var(--font-size-sm);
+      color: var(--text-muted);
+      margin-top: var(--space-xs);
+    }
+
+    @media (max-width: 768px) {
+      .pdf-viewer__canvas-wrap { min-height: 300px; padding: var(--space-sm); }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="#contenido-principal" class="skip-link">Saltar al contenido principal</a>
+
+  <div role="region" aria-label="Opciones de accesibilidad" class="a11y-bar">
+    <span class="a11y-bar__label" aria-hidden="true">Accesibilidad:</span>
+    <button class="a11y-btn" id="btn-texto" aria-pressed="false" aria-label="Aumentar tamaño del texto" onclick="toggleTextSize()">A+</button>
+    <button class="a11y-btn" id="btn-contraste" aria-pressed="false" aria-label="Activar modo de alto contraste" onclick="toggleContrast()">◑ Contraste</button>
+  </div>
+
+  <div class="nav-overlay" id="nav-overlay" aria-hidden="true" onclick="closeMenu()"></div>
+
+  <header class="site-header" role="banner">
+    <nav class="nav-container" aria-label="Navegación principal">
+      <a href="/" class="site-logo" aria-label="Ojos de Wanako - ir al inicio">
+        Ojos de Wanako
+        <span>Tradición oral andina</span>
+      </a>
+      <button class="nav-toggle" id="nav-toggle" aria-controls="nav-menu" aria-expanded="false" aria-label="Abrir menú de navegación" onclick="toggleMenu()">
+        <span class="hamburger-icon" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </span>
+        <span class="nav-toggle__label">Menú</span>
+      </button>
+      <ul class="nav-menu" id="nav-menu" role="list">
+        <li><a href="../">Inicio</a></li>
+        <li><a href="../ojos-de-wanako/" aria-current="page">Ojos de Wanako</a></li>
+        <li><a href="../rio-de-arriba/">Río de Arriba</a></li>
+        <li><a href="../aprende-jugando/">¡Aprende Jugando!</a></li>
+        <li><a href="../material-interactivo/">Material Interactivo</a></li>
+        <li><a href="../catalogo-artistico/">Catálogo Artístico</a></li>
+        <li><a href="../uniendo-naciones/">Uniendo Naciones</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="contenido-principal" tabindex="-1">
+
+    <header class="page-header">
+      <div class="page-header__container">
+        <p class="page-header__eyebrow">Libro ilustrado</p>
+        <h1 class="page-header__title">Ojos de Wanako</h1>
+        <p class="page-header__description">
+          Un recorrido por la tradición oral andina y su vínculo con la observación del cielo nocturno. Disponible en versión digital para leer en pantalla y en versión narrada en audio.
+        </p>
+      </div>
+    </header>
+
+    <div class="main-content">
+
+      <section class="section" aria-labelledby="leer-titulo">
+        <p class="section__label">Versión digital</p>
+        <h2 class="section__title" id="leer-titulo">Lee el libro</h2>
+        <p class="section__body">
+          Hojea el libro directamente aquí, página por página, o descárgalo para leerlo con tu lector de PDF favorito.
+        </p>
+
+        <div class="a11y-note">
+          <strong>Nota de accesibilidad:</strong> si usas un lector de pantalla o una línea braille, te recomendamos la versión en audio más abajo, o descargar el PDF para abrirlo con tu lector de pantalla habitual — el visor de esta página está pensado para lectura visual.
+        </div>
+
+        <div class="pdf-viewer" role="group" aria-label="Visor del libro en PDF">
+          <div class="pdf-viewer__toolbar">
+            <button id="pdf-prev" class="a11y-btn" aria-label="Página anterior" disabled>‹ Anterior</button>
+            <span class="pdf-viewer__page-info">
+              Página
+              <label class="sr-only" for="pdf-page-num">Número de página actual</label>
+              <input type="number" id="pdf-page-num" min="1" value="1" inputmode="numeric">
+              de <span id="pdf-page-count">—</span>
+            </span>
+            <button id="pdf-next" class="a11y-btn" aria-label="Página siguiente" disabled>Siguiente ›</button>
+            <span class="pdf-viewer__zoom">
+              <button id="pdf-zoom-out" class="a11y-btn" aria-label="Reducir zoom">−</button>
+              <button id="pdf-zoom-in" class="a11y-btn" aria-label="Aumentar zoom">+</button>
+            </span>
+          </div>
+
+          <div
+            class="pdf-viewer__canvas-wrap"
+            id="pdf-canvas-wrap"
+            tabindex="0"
+            role="img"
+            aria-label="Página del libro en formato imagen. Usa las flechas izquierda y derecha del teclado para cambiar de página."
+          >
+            <canvas id="pdf-canvas" hidden></canvas>
+            <p class="pdf-viewer__loading" id="pdf-loading">Cargando libro…</p>
+          </div>
+
+          <span class="sr-only" id="pdf-page-announcer" aria-live="polite"></span>
+        </div>
+
+        <p class="pdf-viewer__fallback">
+          <!--  Ruta del PDF: ../assets/ojos-de-wanako.pdf (verificar ruta)-->
+          <a href="../assets/ojos-de-wanako.pdf" class="btn btn--outline" download>⬇ Descargar el libro en PDF</a>
+        </p>
+      </section>
+
+      <section class="section" aria-labelledby="escuchar-titulo">
+        <p class="section__label">Versión narrada</p>
+        <h2 class="section__title" id="escuchar-titulo">Escucha el libro</h2>
+        <p class="section__body">
+          Disfruta la narración completa del libro en formato de audio.
+        </p>
+
+        <div class="audio-player">
+          <!-- 👉 Ruta del audio: ../assets/ojos-de-wanako-audio.mp3 -->
+          <audio controls preload="none" id="audio-libro">
+            <source src="../assets/ojos-de-wanako-audio.mp3" type="audio/mpeg">
+            Tu navegador no soporta la reproducción de audio.
+            Puedes <a href="../assets/ojos-de-wanako-audio.mp3">descargar el archivo aquí</a>.
+          </audio>
+          <p class="audio-player__caption">Narración completa · Ojos de Wanako</p>
+        </div>
+
+        <p>
+          <a href="../assets/ojos-de-wanako-audio.mp3" class="btn btn--outline" download>⬇ Descargar versión en audio</a>
+        </p>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-container">
+      <div>
+        <p class="footer__brand">Ojos de Wanako</p>
+        <p class="footer__tagline">Difusión y visibilización de expresiones artísticas y saberes ancestrales andinos. Acceso equitativo, inclusivo y transnacional.</p>
+      </div>
+      <nav aria-label="Las obras">
+        <h2 class="footer__heading">Las obras</h2>
+        <ul class="footer__links" role="list">
+          <li><a href="/ojos-de-wanako/">Ojos de Wanako</a></li>
+          <li><a href="/rio-de-arriba/">Río de Arriba</a></li>
+          <li><a href="/catalogo-artistico/">Catálogo digital</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Recursos">
+        <h2 class="footer__heading">Recursos</h2>
+        <ul class="footer__links" role="list">
+          <li><a href="/material-interactivo/">Kits pedagógicos</a></li>
+          <li><a href="/accesibilidad/">Declaración de accesibilidad</a></li>
+          <li><a href="/contacto/">Contacto</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer__bottom">
+      <p>Este sitio cumple con los criterios WCAG 2.1 nivel AA</p>
+      <a href="/accesibilidad/">Declaración de accesibilidad</a>
+    </div>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      const menu    = document.getElementById('nav-menu');
+      const toggle  = document.getElementById('nav-toggle');
+      const overlay = document.getElementById('nav-overlay');
+      const isOpen  = menu.classList.toggle('is-open');
+      overlay.classList.toggle('is-open', isOpen);
+      toggle.setAttribute('aria-expanded', isOpen);
+      toggle.setAttribute('aria-label', isOpen ? 'Cerrar menú de navegación' : 'Abrir menú de navegación');
+    }
+
+    function closeMenu() {
+      const menu    = document.getElementById('nav-menu');
+      const toggle  = document.getElementById('nav-toggle');
+      const overlay = document.getElementById('nav-overlay');
+      menu.classList.remove('is-open');
+      overlay.classList.remove('is-open');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'Abrir menú de navegación');
+    }
+
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+
+    const textSizes = ['', 'text-large', 'text-xlarge'];
+    let textIndex = 0;
+
+    function toggleTextSize() {
+      const html = document.documentElement;
+      const btn  = document.getElementById('btn-texto');
+      if (textSizes[textIndex]) html.classList.remove(textSizes[textIndex]);
+      textIndex = (textIndex + 1) % textSizes.length;
+      if (textSizes[textIndex]) html.classList.add(textSizes[textIndex]);
+      btn.setAttribute('aria-pressed', textIndex !== 0);
+      localStorage.setItem('textSize', textIndex);
+    }
+
+    function toggleContrast() {
+      const body = document.body;
+      const btn  = document.getElementById('btn-contraste');
+      const isOn = body.classList.toggle('high-contrast');
+      btn.setAttribute('aria-pressed', isOn);
+      localStorage.setItem('highContrast', isOn);
+    }
+
+    (function restorePreferences() {
+      const savedText     = localStorage.getItem('textSize');
+      const savedContrast = localStorage.getItem('highContrast');
+      if (savedText && savedText !== '0') {
+        textIndex = parseInt(savedText);
+        if (textSizes[textIndex]) {
+          document.documentElement.classList.add(textSizes[textIndex]);
+          document.getElementById('btn-texto').setAttribute('aria-pressed', 'true');
+        }
+      }
+      if (savedContrast === 'true') {
+        document.body.classList.add('high-contrast');
+        document.getElementById('btn-contraste').setAttribute('aria-pressed', 'true');
+      }
+    })();
+  </script>
+
+  <script type="module">
+    import * as pdfjsLib from 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.0.379/build/pdf.min.mjs';
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.0.379/build/pdf.worker.min.mjs';
+
+    // 👉 Ruta del PDF relativa a esta página
+    const PDF_URL = '../assets/ojos-de-wanako.pdf';
+
+    const canvas      = document.getElementById('pdf-canvas');
+    const ctx         = canvas.getContext('2d');
+    const loadingEl   = document.getElementById('pdf-loading');
+    const pageCountEl = document.getElementById('pdf-page-count');
+    const pageInput   = document.getElementById('pdf-page-num');
+    const prevBtn     = document.getElementById('pdf-prev');
+    const nextBtn     = document.getElementById('pdf-next');
+    const zoomInBtn   = document.getElementById('pdf-zoom-in');
+    const zoomOutBtn  = document.getElementById('pdf-zoom-out');
+    const canvasWrap  = document.getElementById('pdf-canvas-wrap');
+    const announcer   = document.getElementById('pdf-page-announcer');
+
+    let pdfDoc  = null;
+    let pageNum = 1;
+    let scale   = 1.2;
+    let busy    = false;
+
+    async function loadPdf() {
+      try {
+        pdfDoc = await pdfjsLib.getDocument(PDF_URL).promise;
+        pageCountEl.textContent = pdfDoc.numPages;
+        pageInput.max = pdfDoc.numPages;
+        canvas.hidden = false;
+        loadingEl.hidden = true;
+        prevBtn.disabled = false;
+        nextBtn.disabled = false;
+        await renderPage(pageNum);
+      } catch (err) {
+        loadingEl.textContent = 'No se pudo cargar el libro. Por favor usa el botón de descarga más abajo.';
+        console.error('Error cargando el PDF:', err);
+      }
+    }
+
+    async function renderPage(num) {
+      if (!pdfDoc || busy) return;
+      busy = true;
+      const page     = await pdfDoc.getPage(num);
+      const viewport = page.getViewport({ scale });
+      canvas.width   = viewport.width;
+      canvas.height  = viewport.height;
+      await page.render({ canvasContext: ctx, viewport }).promise;
+      pageInput.value = num;
+      announcer.textContent = `Página ${num} de ${pdfDoc.numPages}`;
+      busy = false;
+    }
+
+    function goToPage(num) {
+      if (!pdfDoc) return;
+      pageNum = Math.min(Math.max(num, 1), pdfDoc.numPages);
+      renderPage(pageNum);
+    }
+
+    prevBtn.addEventListener('click', () => goToPage(pageNum - 1));
+    nextBtn.addEventListener('click', () => goToPage(pageNum + 1));
+    pageInput.addEventListener('change', () => {
+      const n = parseInt(pageInput.value, 10);
+      goToPage(isNaN(n) ? pageNum : n);
+    });
+    zoomInBtn.addEventListener('click',  () => { scale = Math.min(scale + 0.2, 3);   renderPage(pageNum); });
+    zoomOutBtn.addEventListener('click', () => { scale = Math.max(scale - 0.2, 0.5); renderPage(pageNum); });
+    canvasWrap.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') goToPage(pageNum + 1);
+      if (e.key === 'ArrowLeft')  goToPage(pageNum - 1);
+    });
+
+    loadPdf();
+  </script>
+
+</body>
+</html>

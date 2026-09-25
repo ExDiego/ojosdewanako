@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Río de Arriba — Serie animada | Ojos de Wanako</title>
+  <meta name="description" content="Serie animada en 7 capítulos sobre la tradición oral andina y el cielo nocturno. Con subtítulos en español e inglés y versión en Lengua de Señas Chilena.">
+  <meta property="og:title" content="Río de Arriba — Serie animada">
+  <meta property="og:description" content="7 capítulos animados sobre la cosmovisión andina. Con subtítulos y Lengua de Señas Chilena.">
+  <meta property="og:type" content="website">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <!-- Hoja de estilos compartida — un nivel arriba -->
+  <link rel="stylesheet" href="../styles.css">
+
+  <style>
+    /* ============================================================
+       ESTILOS ESPECÍFICOS DE RÍO DE ARRIBA
+       Solo lo que es único de esta página.
+       Todo lo compartido está en ../styles.css
+    ============================================================ */
+
+    .serie-layout {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: var(--space-lg) var(--space-md);
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: var(--space-lg);
+      align-items: start;
+    }
+
+    /* REPRODUCTOR */
+    .player-wrap {
+      background: #0a1520;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      position: relative;
+      aspect-ratio: 16/9;
+      margin-bottom: var(--space-sm);
+    }
+
+    .player-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(160deg, #0a1a2e 0%, #14294a 60%, #1a1428 100%);
+      position: relative;
+      overflow: hidden;
+      color: var(--color-crema);
+      text-align: center;
+      padding: var(--space-md);
+    }
+
+    .player-placeholder::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(1px 1px at 15% 20%, rgba(228,180,92,.8) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 75% 15%, rgba(228,180,92,.6) 0%, transparent 100%),
+        radial-gradient(1px 1px at 45% 70%, rgba(201,224,235,.7) 0%, transparent 100%),
+        radial-gradient(2px 2px at 85% 60%, rgba(228,180,92,.9) 0%, transparent 100%),
+        radial-gradient(1px 1px at 25% 85%, rgba(201,224,235,.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 60% 35%, rgba(238,229,202,.4) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 35% 50%, rgba(228,180,92,.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 90% 80%, rgba(201,224,235,.6) 0%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .player-placeholder__symbol { font-size: 3.5rem; line-height: 1; margin-bottom: var(--space-sm); color: var(--color-dorado); position: relative; z-index: 1; }
+    .player-placeholder__cap { font-size: var(--font-size-sm); letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-dorado); margin-bottom: 6px; position: relative; z-index: 1; }
+    .player-placeholder__title { font-family: var(--font-display); font-size: var(--font-size-xl); font-weight: 600; color: var(--color-crema); margin-bottom: var(--space-sm); position: relative; z-index: 1; }
+    .player-placeholder__note { font-size: var(--font-size-sm); color: var(--color-celeste); opacity: .8; position: relative; z-index: 1; max-width: 320px; }
+
+    /* CONTROLES */
+    .player-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-md);
+    }
+
+    .version-toggle { display: flex; align-items: center; gap: 8px; background: var(--bg-dark); border-radius: 20px; padding: 4px; }
+
+    .version-btn {
+      font-family: var(--font-body);
+      font-size: var(--font-size-sm);
+      padding: 6px 14px;
+      border-radius: 16px;
+      border: none;
+      cursor: pointer;
+      transition: background var(--transition), color var(--transition);
+      background: transparent;
+      color: rgba(238,229,202,.6);
+      white-space: nowrap;
+    }
+
+    .version-btn.active { background: var(--color-dorado); color: var(--color-azul-noche); font-weight: 500; }
+
+    .subtitle-controls { display: flex; align-items: center; gap: 6px; }
+    .subtitle-label { font-size: var(--font-size-sm); color: var(--text-primary); margin-right: 4px; }
+
+    .sub-btn {
+      font-family: var(--font-body);
+      font-size: var(--font-size-sm);
+      font-weight: 500;
+      padding: 5px 12px;
+      border-radius: var(--radius);
+      border: 1.5px solid var(--color-azul-mar);
+      background: transparent;
+      color: var(--color-azul-mar);
+      cursor: pointer;
+      transition: background var(--transition), color var(--transition);
+    }
+
+    .sub-btn:hover { background: var(--color-azul-mar); color: var(--color-crema); }
+    .sub-btn.active { background: var(--color-azul-mar); color: var(--color-crema); }
+    body.high-contrast .sub-btn { border-color: var(--text-primary); color: var(--text-primary); }
+    body.high-contrast .sub-btn.active { background: var(--text-accent); color: #000; border-color: var(--text-accent); }
+
+    /* INFO CAPÍTULO */
+    .chapter-info { background: var(--bg-secondary); border-radius: var(--radius-lg); padding: var(--space-md); margin-bottom: var(--space-md); }
+    .chapter-info__num { font-size: var(--font-size-sm); font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-ciruela); margin-bottom: 4px; }
+    .chapter-info__title { font-family: var(--font-display); font-size: var(--font-size-xl); font-weight: 600; color: var(--text-primary); margin-bottom: var(--space-xs); }
+    .chapter-info__desc { font-size: var(--font-size-base); line-height: 1.7; color: var(--text-primary); }
+
+    /* NAV CAPÍTULOS */
+    .chapter-nav { display: flex; justify-content: space-between; gap: var(--space-sm); margin-bottom: var(--space-md); }
+
+    .chapter-nav-btn {
+      font-family: var(--font-body);
+      font-size: var(--font-size-sm);
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: var(--radius);
+      border: 1.5px solid var(--color-azul-mar);
+      background: transparent;
+      color: var(--color-azul-mar);
+      cursor: pointer;
+      transition: background var(--transition), color var(--transition);
+    }
+
+    .chapter-nav-btn:hover { background: var(--color-azul-mar); color: var(--color-crema); }
+    .chapter-nav-btn:disabled { opacity: .35; cursor: not-allowed; }
+    .chapter-nav-btn:disabled:hover { background: transparent; color: var(--color-azul-mar); }
+
+    /* SIDEBAR */
+    .chapters-sidebar { position: sticky; top: 80px; }
+    .sidebar-heading { font-size: var(--font-size-sm); font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: var(--space-sm); padding-bottom: var(--space-xs); border-bottom: 1px solid rgba(35,49,73,.15); }
+    .chapters-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .chapter-item { border-radius: var(--radius); overflow: hidden; }
+
+    .chapter-btn {
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: 1.5px solid transparent;
+      border-radius: var(--radius);
+      padding: var(--space-sm);
+      cursor: pointer;
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: var(--space-xs);
+      align-items: center;
+      transition: background var(--transition), border-color var(--transition);
+      font-family: var(--font-body);
+    }
+
+    .chapter-btn:hover { background: var(--bg-secondary); border-color: var(--color-celeste); }
+    .chapter-btn[aria-current="true"] { background: var(--bg-dark); border-color: var(--color-dorado); }
+
+    .chapter-btn__num {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(35,49,73,.12);
+      display: flex; align-items: center; justify-content: center;
+      font-size: var(--font-size-sm); font-weight: 500; color: var(--text-muted);
+      flex-shrink: 0;
+      transition: background var(--transition), color var(--transition);
+    }
+
+    .chapter-btn[aria-current="true"] .chapter-btn__num { background: var(--color-dorado); color: var(--color-azul-noche); }
+    .chapter-btn__info { min-width: 0; }
+    .chapter-btn__title { font-size: var(--font-size-sm); font-weight: 500; color: var(--text-primary); display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .chapter-btn[aria-current="true"] .chapter-btn__title { color: var(--color-crema); }
+    .chapter-btn__duration { font-size: .75rem; color: var(--text-muted); display: block; margin-top: 2px; }
+    .chapter-btn[aria-current="true"] .chapter-btn__duration { color: var(--color-celeste); }
+
+    @media (max-width: 900px) {
+      .serie-layout { grid-template-columns: 1fr; }
+      .chapters-sidebar { position: static; order: -1; }
+      .chapters-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 6px; }
+    }
+
+    @media (max-width: 600px) {
+      .player-controls { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="#contenido-principal" class="skip-link">Saltar al contenido principal</a>
+
+  <div role="region" aria-label="Opciones de accesibilidad" class="a11y-bar">
+    <span class="a11y-bar__label" aria-hidden="true">Accesibilidad:</span>
+    <button class="a11y-btn" id="btn-texto" aria-pressed="false" aria-label="Aumentar tamaño del texto" onclick="toggleTextSize()">A+</button>
+    <button class="a11y-btn" id="btn-contraste" aria-pressed="false" aria-label="Activar modo de alto contraste" onclick="toggleContrast()">◑ Contraste</button>
+  </div>
+
+  <div class="nav-overlay" id="nav-overlay" aria-hidden="true" onclick="closeMenu()"></div>
+
+  <header class="site-header" role="banner">
+    <nav class="nav-container" aria-label="Navegación principal">
+      <a href="/" class="site-logo" aria-label="Ojos de Wanako - ir al inicio">
+        Ojos de Wanako
+        <span>Tradición oral andina</span>
+      </a>
+      <button class="nav-toggle" id="nav-toggle" aria-controls="nav-menu" aria-expanded="false" aria-label="Abrir menú de navegación" onclick="toggleMenu()">
+        <span class="hamburger-icon" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </span>
+        <span class="nav-toggle__label">Menú</span>
+      </button>
+      <ul class="nav-menu" id="nav-menu" role="list">
+        <li><a href="../">Inicio</a></li>
+        <li><a href="../ojos-de-wanako/">Ojos de Wanako</a></li>
+        <li><a href="../rio-de-arriba/" aria-current="page">Río de Arriba</a></li>
+        <li><a href="../aprende-jugando/">¡Aprende Jugando!</a></li>
+        <li><a href="../material-interactivo/">Material Interactivo</a></li>
+        <li><a href="../catalogo-artistico/">Catálogo Artístico</a></li>
+        <li><a href="../uniendo-naciones/">Uniendo Naciones</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="contenido-principal" tabindex="-1">
+
+    <header class="page-header">
+      <div class="page-header__container">
+        <p class="page-header__eyebrow">Serie animada · 7 capítulos</p>
+        <h1 class="page-header__title">Río de Arriba</h1>
+        <p class="page-header__description">
+          Cosmovisión andina y el cielo nocturno, en siete historias animadas. Disponible con subtítulos y versión en Lengua de Señas Chilena.
+        </p>
+        <div class="a11y-badges" aria-label="Opciones de accesibilidad disponibles">
+          <span class="a11y-badge">CC Español</span>
+          <span class="a11y-badge">CC English</span>
+          <span class="a11y-badge">LSCh</span>
+          <span class="a11y-badge">Audiodescripción</span>
+        </div>
+      </div>
+    </header>
+
+    <span class="sr-only" id="player-announcer" aria-live="polite" aria-atomic="true"></span>
+
+    <div class="serie-layout">
+
+      <section aria-labelledby="player-section-title">
+        <h2 id="player-section-title" class="sr-only">Reproductor de video</h2>
+
+        <div class="player-wrap" role="region" aria-label="Reproductor de video Río de Arriba">
+          <!--
+             INTEGRACIÓN BUNNY STREAM:
+            Reemplazar .player-placeholder por el iframe de Bunny.
+
+            Versión LSCh:
+            <iframe id="iframe-lsch" style="width:100%;height:100%;border:none"
+              src="https://iframe.mediadelivery.net/embed/TU_LIBRARY_ID/VIDEO_ID?autoplay=false"
+              allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"
+              allowfullscreen></iframe>
+
+            Versión limpia (ocultar con display:none, mostrar con JS al cambiar):
+            <iframe id="iframe-limpia" style="width:100%;height:100%;border:none;display:none"
+              src="https://iframe.mediadelivery.net/embed/TU_LIBRARY_ID/VIDEO_ID_LIMPIO?autoplay=false"
+              allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"
+              allowfullscreen></iframe>
+
+            Subir subtítulos .vtt ver como subirlos el panel de Bunny Stream.
+          -->
+          <div class="player-placeholder" aria-hidden="true">
+            <div class="player-placeholder__symbol">◐</div>
+            <p class="player-placeholder__cap" id="player-cap-label">Capítulo 1</p>
+            <p class="player-placeholder__title" id="player-title-label">El primer río de estrellas</p>
+            <p class="player-placeholder__note">Aquí irá el reproductor de Bunny Stream.</p>
+          </div>
+        </div>
+
+        <div class="player-controls">
+          <div role="group" aria-label="Versión del video">
+            <div class="version-toggle">
+              <button class="version-btn active" id="btn-version-lsch" aria-pressed="true" onclick="setVersion('lsch')">Con intérprete LSCh</button>
+              <button class="version-btn" id="btn-version-limpia" aria-pressed="false" onclick="setVersion('limpia')">Sin intérprete</button>
+            </div>
+          </div>
+          <div class="subtitle-controls" role="group" aria-label="Subtítulos">
+            <span class="subtitle-label" aria-hidden="true">Subtítulos:</span>
+            <button class="sub-btn" id="sub-es" aria-pressed="false" onclick="setSubtitle('es')" aria-label="Activar subtítulos en español">ES</button>
+            <button class="sub-btn" id="sub-en" aria-pressed="false" onclick="setSubtitle('en')" aria-label="Activar subtítulos en inglés">EN</button>
+            <button class="sub-btn active" id="sub-off" aria-pressed="true" onclick="setSubtitle('off')" aria-label="Desactivar subtítulos">Desactivar</button>
+          </div>
+        </div>
+
+        <div class="chapter-info" aria-live="polite" aria-atomic="true">
+          <p class="chapter-info__num" id="info-num">Capítulo 1 de 7</p>
+          <h2 class="chapter-info__title" id="info-title">El primer río de estrellas</h2>
+          <p class="chapter-info__desc" id="info-desc">El origen del nombre "Río de Arriba" y la primera vez que los pastores andinos miraron hacia el cielo y vieron un río de luz atravesando la noche.</p>
+        </div>
+
+        <nav class="chapter-nav" aria-label="Navegación entre capítulos">
+          <button class="chapter-nav-btn" id="btn-prev" onclick="prevChapter()" disabled aria-label="Capítulo anterior">← Anterior</button>
+          <button class="chapter-nav-btn" id="btn-next" onclick="nextChapter()" aria-label="Capítulo siguiente">Siguiente →</button>
+        </nav>
+
+        <div class="a11y-note">
+          <strong>Versión con intérprete LSCh:</strong> la miniatura del intérprete aparece en la esquina inferior derecha del video. Los subtítulos son independientes de la versión elegida y se activan con los botones ES / EN.
+        </div>
+      </section>
+
+      <aside aria-labelledby="chapters-heading">
+        <h2 class="sidebar-heading" id="chapters-heading">Capítulos</h2>
+        <ul class="chapters-list" role="list" id="chapters-list"></ul>
+      </aside>
+
+    </div>
+  </main>
+
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-container">
+      <div>
+        <p class="footer__brand">Ojos de Wanako</p>
+        <p class="footer__tagline">Difusión de expresiones artísticas y saberes ancestrales andinos. Acceso equitativo, inclusivo y transnacional.</p>
+      </div>
+      <nav aria-label="Las obras">
+        <h2 class="footer__heading">Las obras</h2>
+        <ul class="footer__links" role="list">
+          <li><a href="/ojos-de-wanako/">Ojos de Wanako</a></li>
+          <li><a href="/rio-de-arriba/">Río de Arriba</a></li>
+          <li><a href="/catalogo-artistico/">Catálogo digital</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Recursos">
+        <h2 class="footer__heading">Recursos</h2>
+        <ul class="footer__links" role="list">
+          <li><a href="/material-interactivo/">Kits pedagógicos</a></li>
+          <li><a href="/accesibilidad/">Declaración de accesibilidad</a></li>
+          <li><a href="/contacto/">Contacto</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer__bottom">
+      <p>Este sitio cumple con los criterios WCAG 2.1 nivel AA</p>
+      <a href="/accesibilidad/">Declaración de accesibilidad</a>
+    </div>
+  </footer>
+
+  <script>
+    const capitulos = [
+      { num:1, titulo:"La rana que llama la lluvia",   duracion:"2:54", descripcion:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam." },
+      { num:2, titulo:"El calvario y la luna",    duracion:"2:33", descripcion:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam." },
+      { num:3, titulo:"⁠El tiempo en el elqui",          duracion:"3:26", descripcion:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam." },
+      { num:4, titulo:"⁠Mi papito se reconocia indio", duracion:"3:13", descripcion:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam." },
+      { num:5, titulo:"⁠El revolcadero",     duracion:"3:17", descripcion:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam." },
+      { num:6, titulo:"⁠Ojos de llama",             duracion:"3:23", descripcion:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam," },
+      // { num:7, titulo:"(Solo si hay cap 7)",       duracion:"3:22", descripcion:"El capítulo final recorre el legado de estos saberes ancestrales y su vigencia en las comunidades andinas contemporáneas." },
+    ];
+
+    let capActual = 0;
+
+    function buildChapterList() {
+      const list = document.getElementById('chapters-list');
+      list.innerHTML = '';
+      capitulos.forEach((cap, i) => {
+        const li  = document.createElement('li');
+        li.className = 'chapter-item';
+        const btn = document.createElement('button');
+        btn.className = 'chapter-btn';
+        btn.setAttribute('aria-current', i === capActual ? 'true' : 'false');
+        btn.setAttribute('aria-label', `Reproducir capítulo ${cap.num}: ${cap.titulo}`);
+        btn.onclick = () => loadChapter(i);
+        btn.innerHTML = `
+          <div class="chapter-btn__num" aria-hidden="true">${cap.num}</div>
+          <div class="chapter-btn__info">
+            <span class="chapter-btn__title">${cap.titulo}</span>
+            <span class="chapter-btn__duration">${cap.duracion}</span>
+          </div>`;
+        li.appendChild(btn);
+        list.appendChild(li);
+      });
+    }
+
+    function loadChapter(index) {
+      capActual = index;
+      const cap = capitulos[index];
+      document.getElementById('info-num').textContent            = `Capítulo ${cap.num} de ${capitulos.length}`;
+      document.getElementById('info-title').textContent          = cap.titulo;
+      document.getElementById('info-desc').textContent           = cap.descripcion;
+      document.getElementById('player-cap-label').textContent   = `Capítulo ${cap.num}`;
+      document.getElementById('player-title-label').textContent = cap.titulo;
+      document.getElementById('btn-prev').disabled = index === 0;
+      document.getElementById('btn-next').disabled = index === capitulos.length - 1;
+      document.getElementById('player-announcer').textContent =
+        `Capítulo ${cap.num}: ${cap.titulo}. Duración ${cap.duracion}.`;
+      buildChapterList();
+    }
+
+    function prevChapter() { if (capActual > 0) loadChapter(capActual - 1); }
+    function nextChapter() { if (capActual < capitulos.length - 1) loadChapter(capActual + 1); }
+
+    function setVersion(v) {
+      document.getElementById('btn-version-lsch').setAttribute('aria-pressed',   v === 'lsch');
+      document.getElementById('btn-version-limpia').setAttribute('aria-pressed',  v === 'limpia');
+      document.getElementById('btn-version-lsch').classList.toggle('active',   v === 'lsch');
+      document.getElementById('btn-version-limpia').classList.toggle('active', v === 'limpia');
+      const label = v === 'lsch' ? 'con intérprete de Lengua de Señas Chilena' : 'sin intérprete';
+      document.getElementById('player-announcer').textContent = `Versión: ${label}.`;
+    }
+
+    function setSubtitle(lang) {
+      ['es','en','off'].forEach(l => {
+        const btn = document.getElementById(`sub-${l}`);
+        btn.setAttribute('aria-pressed', l === lang);
+        btn.classList.toggle('active', l === lang);
+      });
+      const labels = { es:'español', en:'inglés', off:'desactivados' };
+      document.getElementById('player-announcer').textContent = `Subtítulos: ${labels[lang]}.`;
+    }
+
+    function toggleMenu() {
+      const menu    = document.getElementById('nav-menu');
+      const toggle  = document.getElementById('nav-toggle');
+      const overlay = document.getElementById('nav-overlay');
+      const isOpen  = menu.classList.toggle('is-open');
+      overlay.classList.toggle('is-open', isOpen);
+      toggle.setAttribute('aria-expanded', isOpen);
+      toggle.setAttribute('aria-label', isOpen ? 'Cerrar menú de navegación' : 'Abrir menú de navegación');
+    }
+
+    function closeMenu() {
+      const menu    = document.getElementById('nav-menu');
+      const toggle  = document.getElementById('nav-toggle');
+      const overlay = document.getElementById('nav-overlay');
+      menu.classList.remove('is-open');
+      overlay.classList.remove('is-open');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'Abrir menú de navegación');
+    }
+
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+
+    const textSizes = ['','text-large','text-xlarge'];
+    let textIndex = 0;
+
+    function toggleTextSize() {
+      const html = document.documentElement;
+      const btn  = document.getElementById('btn-texto');
+      if (textSizes[textIndex]) html.classList.remove(textSizes[textIndex]);
+      textIndex = (textIndex + 1) % textSizes.length;
+      if (textSizes[textIndex]) html.classList.add(textSizes[textIndex]);
+      btn.setAttribute('aria-pressed', textIndex !== 0);
+      localStorage.setItem('textSize', textIndex);
+    }
+
+    function toggleContrast() {
+      const body = document.body;
+      const btn  = document.getElementById('btn-contraste');
+      const isOn = body.classList.toggle('high-contrast');
+      btn.setAttribute('aria-pressed', isOn);
+      localStorage.setItem('highContrast', isOn);
+    }
+
+    (function restorePreferences() {
+      const savedText     = localStorage.getItem('textSize');
+      const savedContrast = localStorage.getItem('highContrast');
+      if (savedText && savedText !== '0') {
+        textIndex = parseInt(savedText);
+        if (textSizes[textIndex]) {
+          document.documentElement.classList.add(textSizes[textIndex]);
+          document.getElementById('btn-texto').setAttribute('aria-pressed','true');
+        }
+      }
+      if (savedContrast === 'true') {
+        document.body.classList.add('high-contrast');
+        document.getElementById('btn-contraste').setAttribute('aria-pressed','true');
+      }
+    })();
+
+    buildChapterList();
+    loadChapter(0);
+  </script>
+</body>
+</html>
