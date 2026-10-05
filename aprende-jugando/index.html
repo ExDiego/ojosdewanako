@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>¡Aprende Jugando! — Ojos de Wanako</title>
+  <meta name="description" content="Juegos interactivos para aprender sobre la tradición oral andina y la observación del cielo nocturno.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../styles.css">
+
+  <style>
+    /* ============================================================
+       ESTILOS ESPECÍFICOS DE ¡APRENDE JUGANDO!
+    ============================================================ */
+
+    /* Cabecera simple sin el page-header azul —
+       el título va directo sobre el fondo crema */
+    .games-header {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: var(--space-xl) var(--space-md) var(--space-lg);
+      border-bottom: 2px solid var(--color-azul-noche);
+    }
+
+    .games-header__title {
+      font-family: var(--font-display);
+      /* ✅ Texto en minúsculas en HTML, CSS hace la transformación.
+         El lector de pantalla pronuncia "¡Aprende Jugando!"
+         correctamente, no letra por letra. */
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 600;
+      color: var(--color-azul-noche);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* Grilla de juegos */
+    .games-grid {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: var(--space-xl) var(--space-md);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-lg);
+    }
+
+    /* Tarjeta de juego — el <a> es el elemento interactivo completo */
+    .game-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      gap: var(--space-sm);
+    }
+
+    /* Área de imagen/video */
+    .game-card__media {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 20px;
+      overflow: hidden;
+      background: var(--color-celeste);
+    }
+
+    /* Imagen de portada */
+    .game-card__image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 20px;
+      transition: opacity 300ms ease;
+    }
+
+    /* Video de preview — oculto por defecto, aparece en hover */
+    .game-card__video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 20px;
+      opacity: 0;
+      transition: opacity 300ms ease;
+    }
+
+    /* Hover/focus: muestra el video, oculta levemente la imagen */
+    .game-card:hover .game-card__video,
+    .game-card:focus-visible .game-card__video,
+    .game-card:focus-within .game-card__video {
+      opacity: 1;
+    }
+
+    .game-card:hover .game-card__image,
+    .game-card:focus-visible .game-card__image,
+    .game-card:focus-within .game-card__image {
+      opacity: 0;
+    }
+
+    /* ✅ Respeta la preferencia del sistema "reducir movimiento"
+       Para usuarios con epilepsia fotosensible o migrañas:
+       el video nunca aparece, solo la imagen estática. */
+    @media (prefers-reduced-motion: reduce) {
+      .game-card__video {
+        display: none;
+      }
+      .game-card:hover .game-card__image,
+      .game-card:focus-visible .game-card__image {
+        opacity: 1;
+      }
+    }
+
+    /* Efecto sutil de escala en la tarjeta al hover */
+    .game-card__media {
+      transition: transform 250ms ease, box-shadow 250ms ease;
+    }
+
+    .game-card:hover .game-card__media,
+    .game-card:focus-visible .game-card__media {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(1, 68, 102, 0.2);
+    }
+
+    /* Título del juego — visible bajo la tarjeta */
+    .game-card__title {
+      font-family: var(--font-display);
+      font-size: var(--font-size-base);
+      font-weight: 600;
+      color: var(--color-azul-noche);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      text-align: center;
+    }
+
+    .game-card:hover .game-card__title {
+      color: var(--color-azul-mar);
+    }
+
+    /* Focus visible en la tarjeta — el outline va sobre el media */
+    .game-card:focus-visible {
+      outline: none; /* eliminamos el outline del <a> */
+    }
+
+    .game-card:focus-visible .game-card__media {
+      outline: 3px solid var(--color-dorado);
+      outline-offset: 3px;
+    }
+
+    /* Placeholder visual mientras no hay imagen real */
+    .game-card__placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-celeste);
+      color: var(--color-azul-mar);
+      font-size: 3rem;
+      opacity: 0.4;
+    }
+
+    /* Etiqueta "Próximamente" sobre la tarjeta cuando el juego
+       aún no está disponible */
+    .game-card__badge {
+      position: absolute;
+      top: var(--space-sm);
+      right: var(--space-sm);
+      background: var(--color-dorado);
+      color: var(--color-azul-noche);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 20px;
+      z-index: 1;
+    }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (max-width: 768px) {
+      .games-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-md);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .games-grid {
+        grid-template-columns: 1fr;
+        max-width: 320px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="#contenido-principal" class="skip-link">Saltar al contenido principal</a>
+
+  <div class="nav-overlay" id="nav-overlay" aria-hidden="true" onclick="closeMenu()"></div>
+
+  <div role="region" aria-label="Opciones de accesibilidad" class="a11y-bar">
+    <span class="a11y-bar__label" aria-hidden="true">Accesibilidad:</span>
+    <button class="a11y-btn" id="btn-texto" aria-pressed="false" aria-label="Aumentar tamaño del texto" onclick="toggleTextSize()">A+</button>
+    <button class="a11y-btn" id="btn-contraste" aria-pressed="false" aria-label="Activar modo de alto contraste" onclick="toggleContrast()">◑ Contraste</button>
+  </div>
+
+  <header class="site-header" role="banner">
+    <nav class="nav-container" aria-label="Navegación principal">
+      <a href="/" class="site-logo" aria-label="Ojos de Wanako - ir al inicio">
+        Ojos de Wanako
+        <span>Tradición oral andina</span>
+      </a>
+      <button class="nav-toggle" id="nav-toggle" aria-controls="nav-menu" aria-expanded="false" aria-label="Abrir menú de navegación" onclick="toggleMenu()">
+        <span class="hamburger-icon" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </span>
+        <span class="nav-toggle__label">Menú</span>
+      </button>
+      <ul class="nav-menu" id="nav-menu" role="list">
+        <li><a href="/">Inicio</a></li>
+        <li><a href="/ojos-de-wanako/">Ojos de Wanako</a></li>
+        <li><a href="/rio-de-arriba/">Río de Arriba</a></li>
+        <li><a href="/aprende-jugando/" aria-current="page">¡Aprende Jugando!</a></li>
+        <li><a href="/material-interactivo/">Material Interactivo</a></li>
+        <li><a href="/catalogo-artistico/">Catálogo Artístico</a></li>
+        <li><a href="/uniendo-naciones/">Uniendo Naciones</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="contenido-principal" tabindex="-1">
+        <header class="page-header">
+      <div class="page-header__container">
+        <!-- <p class="page-header__eyebrow">Texto</p> -->
+        <h1 class="page-header__title">¡Aprende Jugando!</h1>
+<!--         <p class="page-header__description">
+          Un recorrido por la tradición oral andina y su vínculo con la observación del cielo nocturno. Disponible en versión digital para leer en pantalla y en versión narrada en audio.
+        </p> -->
+      </div>
+    </header>
+<!--     <div class="games-header">
+      <h1 class="games-header__title">¡Aprende Jugando!</h1>
+    </div> -->
+
+    <section class="games-grid" aria-labelledby="games-section-label">
+      <h2 id="games-section-label" class="sr-only">Juegos disponibles</h2>
+
+      <!--
+        ============================================================
+        JUEGOS — datos para actualizar
+        Los nombres de carpeta coinciden con la ruta de la página:
+        /aprende-jugando/anagrama/   →  carpeta: aprende-jugando/anagrama/
+        /aprende-jugando/parejas/    →  carpeta: aprende-jugando/parejas/
+        /aprende-jugando/cuestionario/ → carpeta: aprende-jugando/cuestionario/
+
+           Para cada juego:
+           1. Cambiar href por la ruta real    (/aprende-jugando/nombre-del-juego/)
+           2. Cambia aria-label               (nombre descriptivo del juego)
+           3. Reemplaza el div.placeholder    por <img src="../assets/juego-X-portada.jpg" alt="...">
+           4. Agrega el <video>               con src="../assets/juego-X-preview.mp4"
+           5. Actualiza game-card__title      con el nombre real del juego
+           6. Elimina game-card__badge        cuando el juego esté disponible
+        ============================================================
+      -->
+
+      <!-- JUEGO 1 -->
+      <a
+        href="/aprende-jugando/juego-1/"
+        class="game-card"
+        aria-label="Juego 1 — próximamente disponible"
+      >
+        <div class="game-card__media">
+
+          <!-- Imagen de portada
+               👉 Reemplazar por:
+               <img class="game-card__image"
+                    src="../assets/juego-1-portada.jpg"
+                    alt="Descripción de la imagen del juego 1"> -->
+          <div class="game-card__placeholder" aria-hidden="true">✦</div>
+
+          <!-- Video de preview — se reproduce en hover/focus
+               👉 Reemplazar src cuando tengas la grabación:
+               <video class="game-card__video"
+                      src="../assets/juego-1-preview.mp4"
+                      muted loop playsinline
+                      aria-hidden="true">
+               </video> -->
+
+          <span class="game-card__badge">Próximamente</span>
+        </div>
+        <span class="game-card__title">Juego 1</span>
+      </a>
+
+      <!-- JUEGO 2 -->
+      <a
+        href="/aprende-jugando/juego-2/"
+        class="game-card"
+        aria-label="Juego 2 — próximamente disponible"
+      >
+        <div class="game-card__media">
+          <div class="game-card__placeholder" aria-hidden="true">◐</div>
+          <span class="game-card__badge">Próximamente</span>
+        </div>
+        <span class="game-card__title">Juego 2</span>
+      </a>
+
+      <!-- JUEGO 3 -->
+      <a
+        href="/aprende-jugando/juego-3/"
+        class="game-card"
+        aria-label="Juego 3 — próximamente disponible"
+      >
+        <div class="game-card__media">
+          <div class="game-card__placeholder" aria-hidden="true">◉</div>
+          <span class="game-card__badge">Próximamente</span>
+        </div>
+        <span class="game-card__title">Juego 3</span>
+      </a>
+
+    </section>
+  </main>
+
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-container">
+      <div>
+        <p class="footer__brand">Ojos de Wanako</p>
+        <p class="footer__tagline">Difusión y visibilización de expresiones artísticas y saberes ancestrales andinos. Acceso equitativo, inclusivo y transnacional.</p>
+      </div>
+      <nav aria-label="Las obras">
+        <h2 class="footer__heading">Las obras</h2>
+        <ul class="footer__links" role="list">
+          <li><a href="/ojos-de-wanako/">Ojos de Wanako</a></li>
+          <li><a href="/rio-de-arriba/">Río de Arriba</a></li>
+          <li><a href="/catalogo-artistico/">Catálogo Artístico</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Explora">
+        <h2 class="footer__heading">Explora</h2>
+        <ul class="footer__links" role="list">
+          <li><a href="/aprende-jugando/">¡Aprende Jugando!</a></li>
+          <li><a href="/material-interactivo/">Material Interactivo</a></li>
+          <li><a href="/uniendo-naciones/">Uniendo Naciones</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer__bottom">
+      <p>Este sitio cumple con los criterios WCAG 2.1 nivel AA</p>
+      <a href="/accesibilidad/">Declaración de accesibilidad</a>
+    </div>
+  </footer>
+
+  <script>
+    /* ============================================================
+       HOVER CON VIDEO — respeta prefers-reduced-motion
+    ============================================================ */
+    const prefersReducedMotion =
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    document.querySelectorAll('.game-card').forEach(card => {
+      const video = card.querySelector('.game-card__video');
+      if (!video || prefersReducedMotion) return;
+
+      // Play en hover
+      card.addEventListener('mouseenter', () => {
+        video.currentTime = 0;
+        video.play().catch(() => {}); // catch por si el navegador bloquea autoplay
+      });
+
+      // Pause al salir
+      card.addEventListener('mouseleave', () => {
+        video.pause();
+        video.currentTime = 0;
+      });
+
+      // Play también con teclado (foco)
+      card.addEventListener('focusin',  () => { video.currentTime = 0; video.play().catch(() => {}); });
+      card.addEventListener('focusout', () => { video.pause(); video.currentTime = 0; });
+    });
+
+    /* ============================================================
+       NAVEGACIÓN
+    ============================================================ */
+    function toggleMenu() {
+      const menu    = document.getElementById('nav-menu');
+      const toggle  = document.getElementById('nav-toggle');
+      const overlay = document.getElementById('nav-overlay');
+      const isOpen  = menu.classList.toggle('is-open');
+      overlay.classList.toggle('is-open', isOpen);
+      toggle.setAttribute('aria-expanded', isOpen);
+      toggle.setAttribute('aria-label', isOpen ? 'Cerrar menú de navegación' : 'Abrir menú de navegación');
+    }
+
+    function closeMenu() {
+      const menu    = document.getElementById('nav-menu');
+      const toggle  = document.getElementById('nav-toggle');
+      const overlay = document.getElementById('nav-overlay');
+      menu.classList.remove('is-open');
+      overlay.classList.remove('is-open');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'Abrir menú de navegación');
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+
+    /* ============================================================
+       ACCESIBILIDAD
+    ============================================================ */
+    const textSizes = ['', 'text-large', 'text-xlarge'];
+    let textIndex = 0;
+
+    function toggleTextSize() {
+      const html = document.documentElement;
+      const btn  = document.getElementById('btn-texto');
+      if (textSizes[textIndex]) html.classList.remove(textSizes[textIndex]);
+      textIndex = (textIndex + 1) % textSizes.length;
+      if (textSizes[textIndex]) html.classList.add(textSizes[textIndex]);
+      btn.setAttribute('aria-pressed', textIndex !== 0);
+      localStorage.setItem('textSize', textIndex);
+    }
+
+    function toggleContrast() {
+      const isOn = document.body.classList.toggle('high-contrast');
+      document.getElementById('btn-contraste').setAttribute('aria-pressed', isOn);
+      localStorage.setItem('highContrast', isOn);
+    }
+
+    (function restorePreferences() {
+      const savedText     = localStorage.getItem('textSize');
+      const savedContrast = localStorage.getItem('highContrast');
+      if (savedText && savedText !== '0') {
+        textIndex = parseInt(savedText);
+        if (textSizes[textIndex]) {
+          document.documentElement.classList.add(textSizes[textIndex]);
+          document.getElementById('btn-texto').setAttribute('aria-pressed', 'true');
+        }
+      }
+      if (savedContrast === 'true') {
+        document.body.classList.add('high-contrast');
+        document.getElementById('btn-contraste').setAttribute('aria-pressed', 'true');
+      }
+    })();
+  </script>
+
+</body>
+</html>
