@@ -70,6 +70,8 @@
      El usuario puede cambiar el tamaño base desde su navegador
      y todo el sitio escala proporcionalmente. */
   --font-size-base: 1rem;       /* 16px */
+  --font-size-xxsm: 0.75rem;    /* 12px Evitar usar este tamaño al ser demasiado pequeño*/ 
+  --font-size-xsm:  0.8125rem;  /* 13px */
   --font-size-sm:   0.875rem;   /* 14px */
   --font-size-lg:   1.125rem;   /* 18px */
   --font-size-xl:   1.5rem;     /* 24px */
@@ -307,12 +309,12 @@ a:hover {
 
 .site-logo span {
   display: block;
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xsm);
   font-family: var(--font-body);
   font-weight: 300;
   color: var(--color-dorado);
   letter-spacing: 0.08em;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
 }
 
 .site-logo:hover { color: var(--color-crema); }
@@ -730,6 +732,11 @@ body.high-contrast .a11y-note strong {
   gap: var(--space-xs);
   font-size: var(--font-size-sm);
   color: rgba(238, 229, 202, 0.5);
+}
+
+.footer_detail {
+  font-size: var(--font-size-xsm);
+  font-style: italic;
 }
 
 .footer__bottom a {

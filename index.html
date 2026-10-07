@@ -26,7 +26,8 @@
     /* HERO */
     .hero {
       background: var();
-      background-image: url("assets/img/paisaje4.jpg");
+      background-image: url("assets/img/poster_inicio04.jpg");
+      background-attachment: fixed;
       background-repeat: no-repeat;
       background-size: cover;
       background-position: center;
@@ -120,12 +121,15 @@
       text-decoration: none;
       display: block;
       transition: transform var(--transition), box-shadow var(--transition);
+      transition: 500ms;
     }
 
     .obra-card:hover {
       transform: translateY(-4px);
       box-shadow: 0 12px 32px rgba(1,68,102,0.25);
       color: var(--text-on-dark);
+      opacity: 0.95;
+      transition: 500ms;
     }
 
     .obra-card__image {
@@ -137,6 +141,7 @@
       font-family: var(--font-display);
       font-size: 3rem;
       color: var(--color-dorado);
+      transition: 300ms;
       opacity: 0.5;
     }
 
@@ -183,8 +188,8 @@
   <header class="site-header" role="banner">
     <nav class="nav-container" aria-label="Navegación principal">
       <a href="./" class="site-logo" aria-label="Ojos de Wanako - ir al inicio">
-        Ojos de Wanako
-        <span>Tradición oral andina</span>
+        Ojos de wanako & Río de arriba 
+        <span>Saberes del territorio </br> para volver a mirar el cielo</span>
       </a>
 
       <button
@@ -205,12 +210,13 @@
 
       <ul class="nav-menu" id="nav-menu" role="list">
         <li><a href="./" aria-current="page">Inicio</a></li>
-        <li><a href="./ojos-de-wanako/">Ojos de Wanako</a></li>
-        <li><a href="./rio-de-arriba/">Río de Arriba</a></li>
+           <li><a href="/ojos-de-wanako/">Ojos de Wanako</a></li>
+        <li><a href="/rio-de-arriba/">Río de Arriba</a></li>
+        <li><a href="/material-pedagogico/">Material Pedagógico</a></li>
         <li><a href="./aprende-jugando/">¡Aprende Jugando!</a></li>
-        <li><a href="./material-interactivo/">Material Interactivo</a></li>
-        <li><a href="./catalogo-artistico/">Catálogo Artístico</a></li>
-        <li><a href="./uniendo-naciones/">Uniendo Naciones</a></li>
+      <li><a href="/uniendo-naciones/">Uniendo Naciones</a></li>
+        <li><a href="/voces-territorios/">Las Voces de los Territorios</a></li>
+        <li><a href="/catalogo-artistico/">Catálogo Artístico</a></li>
       </ul>
     </nav>
   </header>
@@ -228,8 +234,8 @@
           Obras que ponen en valor la tradición oral andina sobre la observación del cielo nocturno, a través del arte visual, la animación y los saberes ancestrales.
         </p>
         <div class="hero__actions">
-          <a href="./ojos-de-wanako/" class="btn btn--primary">Explorar las obras</a>
-          <a href="./material-interactivo/" class="btn btn--primary">Materiales pedagógicos</a>
+          <a href="./ojos-de-wanako/" class="btn btn--primary">Explora Ojos de Wanako</a>
+          <a href="./material-interactivo/" class="btn btn--primary">Mira Río de Arriba</a>
         </div>
       </div>
     </section>
@@ -237,14 +243,18 @@
     <section class="main-content" aria-labelledby="obras-titulo">
       <div class="section">
         <p class="section__label">Las obras</p>
-        <h2 class="section__title" id="obras-titulo">Dos ventanas al cielo andino</h2>
+        <h2 class="section__title" id="obras-titulo">DOS PUENTES PARA OBSERVAR EL CIELO NOCTURNO</h2>
         <p class="section__body">
-          Explora el libro ilustrado y la serie animada que reúnen saberes ancestrales sobre las estrellas, las constelaciones y el cosmos desde la mirada de los pueblos andinos.
+          Explora el libro ilustrado y la serie animada que nos acercan a los relatos, saberes y formas de observar el cielo que permanecen vivos en los 
+          territorios andinos. Un recorrido por estrellas, constelaciones, paisajes celestes y señaleros de la naturaleza para volver a mirar el cielo 
+          desde la memoria de los pueblos.
         </p>
 
         <div class="obras-grid">
           <a href="./ojos-de-wanako/" class="obra-card" aria-label="Ver Ojos de Wanako — libro ilustrado sobre tradición oral andina">
-            <div class="obra-card__image" aria-hidden="true">✦</div>
+            <div class="obra-card__image"  aria-hidden="true">
+              <img src="./assets/img/portada_libro.jpg">
+            </div>
             <div class="obra-card__body">
               <p class="obra-card__tag">Libro ilustrado</p>
               <h3 class="obra-card__title">Ojos de Wanako</h3>
@@ -253,7 +263,9 @@
           </a>
 
           <a href="./rio-de-arriba/" class="obra-card" aria-label="Ver Río de Arriba — serie animada con audiodescripción y subtítulos">
-            <div class="obra-card__image" aria-hidden="true">◐</div>
+            <div class="obra-card__image" aria-hidden="true">
+              <img src="./assets/img/portada_serie.jpg">
+            </div>
             <div class="obra-card__body">
               <p class="obra-card__tag">Serie animada</p>
               <h3 class="obra-card__title">Río de Arriba</h3>
@@ -269,8 +281,8 @@
   <footer class="site-footer" role="contentinfo">
     <div class="footer-container">
       <div>
-        <p class="footer__brand">Ojos de Wanako</p>
-        <p class="footer__tagline">Difusión y visibilización de expresiones artísticas y saberes ancestrales andinos. Acceso equitativo, inclusivo y transnacional.</p>
+        <p class="footer__brand">Ojos de wanako & Río de arriba </p>
+        <p class="footer__tagline">Relatos, saberes y arte que nos convida a mirar el cielo nocturno y sus señaleros desde los territorios.</p>
       </div>
       <nav aria-label="Las obras">
         <h2 class="footer__heading">Las obras</h2>
@@ -284,12 +296,19 @@
         <h2 class="footer__heading">Explora</h2>
         <ul class="footer__links" role="list">
           <li><a href="./aprende-jugando/">¡Aprende Jugando!</a></li>
-          <li><a href="./material-interactivo/">Material Interactivo</a></li>
+          <li><a href="./material-pedagogico/">Material pedagógico</a></li>
           <li><a href="./uniendo-naciones/">Uniendo Naciones</a></li>
+          <li><a href="./voces-territorio">Las Voces de los Territorios</a></li>
         </ul>
       </nav>
+       <p class="footer_detail">Saberes del territorio para volver a mirar el cielo. </br>
+        Proyecto financiado por el Fondo Nacional de Desarrollo
+           Cultural y las Artes (Fondart), convocatoria [año], en la
+           línea Difusión y Nuevos Medios.
+       </p>
     </div>
     <div class="footer__bottom">
+      
       <p>Este sitio cumple con los criterios WCAG 2.1 nivel AA</p>
       <a href="./accesibilidad/">Declaración de accesibilidad</a>
     </div>
