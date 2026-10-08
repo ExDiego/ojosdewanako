@@ -131,7 +131,7 @@
     .chapter-info { background: var(--bg-secondary); border-radius: var(--radius-lg); padding: var(--space-md); margin-bottom: var(--space-md); }
     .chapter-info__num { font-size: var(--font-size-sm); font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-ciruela); margin-bottom: 4px; }
     .chapter-info__title { font-family: var(--font-display); font-size: var(--font-size-xl); font-weight: 600; color: var(--text-primary); margin-bottom: var(--space-xs); }
-    .chapter-info__desc { font-size: var(--font-size-base); line-height: 1.7; color: var(--text-primary); }
+    .chapter-info__desc { font-size: var(--font-size-sm); line-height: 1.7; color: var(--text-primary); }
 
     /* NAV CAPÍTULOS */
     .chapter-nav { display: flex; justify-content: space-between; gap: var(--space-sm); margin-bottom: var(--space-md); }
@@ -233,10 +233,12 @@
         <li><a href="../">Inicio</a></li>
         <li><a href="../ojos-de-wanako/">Ojos de Wanako</a></li>
         <li><a href="../rio-de-arriba/" aria-current="page">Río de Arriba</a></li>
+        <li><a href="../material-pedagogico/">Material Pedagógico</a></li>
         <li><a href="../aprende-jugando/">¡Aprende Jugando!</a></li>
-        <li><a href="../material-interactivo/">Material Interactivo</a></li>
-        <li><a href="../catalogo-artistico/">Catálogo Artístico</a></li>
         <li><a href="../uniendo-naciones/">Uniendo Naciones</a></li>
+        <li><a href="../voces-territorios/">Las Voces de los Territorios</a></li>
+        <li><a href="../catalogo-artistico/">Catálogo Artístico</a></li>
+        
       </ul>
     </nav>
   </header>
@@ -245,11 +247,17 @@
 
     <header class="page-header">
       <div class="page-header__container">
-        <p class="page-header__eyebrow">Serie animada · 7 capítulos</p>
+        <p class="page-header__eyebrow">Serie animada · 6 capítulos</p>
         <h1 class="page-header__title">Río de Arriba</h1>
-        <p class="page-header__description">
-          Cosmovisión andina y el cielo nocturno, en siete historias animadas. Disponible con subtítulos y versión en Lengua de Señas Chilena.
+        <p class="page-header__description_title">
+          Seis historias para mirar el cielo nocturno desde la memoria y la cosmovisión de los pueblos andinos.
         </p>
+        <p class="page-header__description">
+          Río de Arriba es una serie animada que nos invita a recorrer relatos sobre las estrellas, las constelaciones, los animales del cielo y las señales que conectan el cielo con la vida en el territorio.
+          Cada capítulo abre una ventana a una forma de comprender y relacionarse con el cielo nocturno.
+          Disponible con subtítulos en español, Ingles, Kiwchua, versión en Lengua de Señas Chilena y Audiodescripción.
+        </p>
+
         <div class="a11y-badges" aria-label="Opciones de accesibilidad disponibles">
           <span class="a11y-badge">CC Español</span>
           <span class="a11y-badge">CC English</span>
@@ -329,47 +337,134 @@
         <ul class="chapters-list" role="list" id="chapters-list"></ul>
       </aside>
 
+
+      <div class="credits">
+        <p class="credits_title">
+          Créditos
+        </p>
+        <hr>
+
+        <p class="credits_subtitle">
+          Equipo creativo
+        </p>
+        <p class="credits_text">
+          Camila Díaz Verdejo · Paulina Espinoza Dubo · Peter Bhamondes Díaz
+        </p>
+
+         <p class="credits_subtitle">
+          Cultores y portadores tradicionales
+        </p>
+        <p class="credits_text">
+          Francisca Chinga · Juan Adonis Quilpatay · Dionisia Rojas · Zoilo Gerónimo Escalante · Celinda Portilla · Lucha Oscco Taype
+        </p>
+
+        <p class="credits_subtitle">
+          Animación, montaje y diseño de producción
+        </p>
+        <p class="credits_text">
+          Emilio Alvayay Durand </br>
+          Lucas Alvayay Durand  </br>
+          9C Estudios
+
+        <p class="credits_subtitle">
+          Musicalización y dirección creativa
+        </p>
+        <p class="credits_text">
+          Felipe Quilaqueo · Círculo IKKA
+        </p>
+
+        <p class="credits_subtitle">
+          Composición, ejecución y voz
+        </p>
+        <p class="credits_text">
+          Mathias Cantillanes Montalván · Wawquitrewa Música
+        </p>
+
+        <p class="credits_subtitle">
+          Segunda voz
+        </p>
+        <p class="credits_text">
+          Ángeles Gálvez Música
+        </p>
+        
+        <p class="credits_subtitle">
+          Intérpretes en Lengua de Señas Chilena (LSCh)
+        </p>
+        <p class="credits_text">
+          Olivia Villalobos · William Ruiz
+        </p>
+
+        <p class="credits_subtitle">
+          Grabación y edición de video
+        </p>
+        <p class="credits_text">
+          Patricio Ruiz Alarcón · NAEKI-AUDIOVISUAL
+        </p>
+
+        <p class="credits_subtitle">
+          Ingeniería de sonido
+        </p>
+        <p class="credits_text">
+          Pablo Miranda Rubilar · PortaestudioChakana
+        </p>
+
+        
+
+      </div>
+
     </div>
   </main>
 
   <footer class="site-footer" role="contentinfo">
     <div class="footer-container">
       <div>
-        <p class="footer__brand">Ojos de Wanako</p>
-        <p class="footer__tagline">Difusión de expresiones artísticas y saberes ancestrales andinos. Acceso equitativo, inclusivo y transnacional.</p>
+        <p class="footer__brand">Ojos de wanako & Río de arriba </p>
+        <p class="footer__tagline">Relatos, saberes y arte que nos convida a mirar el cielo nocturno y sus señaleros desde los territorios.</p>
       </div>
       <nav aria-label="Las obras">
         <h2 class="footer__heading">Las obras</h2>
         <ul class="footer__links" role="list">
-          <li><a href="../ojos-de-wanako/">Ojos de Wanako</a></li>
-          <li><a href="../rio-de-arriba/">Río de Arriba</a></li>
-          <li><a href="../catalogo-artistico/">Catálogo digital</a></li>
+          <li><a href="./ojos-de-wanako/">Ojos de Wanako</a></li>
+          <li><a href="./rio-de-arriba/">Río de Arriba</a></li>
+          <li><a href="./catalogo-artistico/">Catálogo Artístico</a></li>
         </ul>
       </nav>
-      <nav aria-label="Recursos">
-        <h2 class="footer__heading">Recursos</h2>
+      <nav aria-label="Explora">
+        <h2 class="footer__heading">Explora</h2>
         <ul class="footer__links" role="list">
-          <li><a href="../material-interactivo/">Kits pedagógicos</a></li>
-          <li><a href="../accesibilidad/">Declaración de accesibilidad</a></li>
-          <li><a href="../contacto/">Contacto</a></li>
+          <li><a href="./aprende-jugando/">¡Aprende Jugando!</a></li>
+          <li><a href="./material-pedagogico/">Material pedagógico</a></li>
+          <li><a href="./uniendo-naciones/">Uniendo Naciones</a></li>
+          <li><a href="./voces-territorio">Las Voces de los Territorios</a></li>
         </ul>
       </nav>
+      <div>
+        <p class="footer_detail_t">
+          Saberes del territorio para volver a mirar el cielo. 
+        </p>
+        <p class="footer_detail"> 
+          Proyecto financiado por el Fondo Nacional de Desarrollo
+          Cultural y las Artes (Fondart), convocatoria [año], en la
+          línea Difusión y Nuevos Medios.
+        </p>   
+
+      </div>
     </div>
     <div class="footer__bottom">
+      
       <p>Este sitio cumple con los criterios WCAG 2.1 nivel AA</p>
-      <a href="../accesibilidad/">Declaración de accesibilidad</a>
+      <a href="./accesibilidad/">Declaración de accesibilidad</a>
     </div>
   </footer>
 
   <script>
     const capitulos = [
-      { num:1, titulo:"La rana que llama la lluvia",   duracion:"2:54", descripcion:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam." },
-      { num:2, titulo:"El calvario y la luna",    duracion:"2:33", descripcion:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam." },
-      { num:3, titulo:"⁠El tiempo en el elqui",          duracion:"3:26", descripcion:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam." },
-      { num:4, titulo:"⁠Mi papito se reconocia indio", duracion:"3:13", descripcion:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam." },
-      { num:5, titulo:"⁠El revolcadero",     duracion:"3:17", descripcion:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam." },
-      { num:6, titulo:"⁠Ojos de llama",             duracion:"3:23", descripcion:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam," },
-      // { num:7, titulo:"(Solo si hay cap 7)",       duracion:"3:22", descripcion:"El capítulo final recorre el legado de estos saberes ancestrales y su vigencia en las comunidades andinas contemporáneas." },
+      { num:1, titulo:"La rana que llama la lluvia",   duracion:"2:54", descripcion:"Entre los cerros del Valle de Elqui, el agua también se anuncia a través de sus sonidos. Hay quienes aprendieron a reconocer sus señales y a escuchar aquello que la naturaleza cuenta antes de que llegue la lluvia. Doña Celinda Portilla, cultora Diaguita del Valle de Elqui, es criancera y portadora de saberes heredados de su tronco familiar. Practica la ganadería caprina trashumante y recorre junto a sus rebaños las rutas ancestrales de la alta cordillera elquina. Cada año, durante la veranada, participa de la tradicional fiesta del Chivato de Oro, encuentro comunitario que celebra la memoria, el trabajo compartido y la abundancia que entregan las cabras. Desde este territorio y esta forma de habitar la cordillera, Doña Celinda comparte la antigua historia de la rana que, con su canto profundo, llama la lluvia." },
+      { num:2, titulo:"El calvario y la luna",    duracion:"2:33", descripcion:"Entre los cerros del Valle de Elqui, hay lugares donde el paisaje guarda historias que atraviesan el tiempo. La luna, las piedras y las plantas también forman parte de una memoria que se transmite de generación en generación. Abuela Nicha, hierbatera y conocedora de saberes y secretos antiguos, trabaja junto a las plantas de remedio, los quiscos y las piedras milagrosas. Su conocimiento nace de una relación cercana con el territorio y con aquello que la naturaleza revela a quienes saben observar y escuchar." },
+      { num:3, titulo:"⁠El tiempo en el Elqui",          duracion:"3:26", descripcion:"En el Valle de Elqui, mirar el cielo también es una forma de leer el territorio.  Las estrellas, los cerros y el río forman parte de un paisaje vivo, donde el tiempo se observa, se escucha y se siente. Don Juan, portador Diaguita y oriundo del pueblo de Diaguitas, comparte su mirada sobre el cielo nocturno: una observación que no es solo contemplación, sino también una forma de comunicación profunda con las estrellas, los cerros tutelares y el río que transmite las memorias del territorio. A través de su relato, descubrimos cómo el paisaje estrellado y la tierra se entrelazan con la vida, la memoria y el sentir de los Pueblos Originarios." },
+      { num:4, titulo:"⁠Mi papito se reconocia indio", duracion:"3:13", descripcion:"En el Valle de Elqui, la noche de San Juan es una noche profunda y cargada de señales. Una noche en que el mundo cotidiano parece abrirse a otras dimensiones y en que las costumbres, los relatos y los saberes se encuentran con aquello que no siempre podemos ver. Abuela Pancha, cultora y sabedora Diaguita, hierbatera, componedora de huesos y meica tradicional, comparte en este capítulo un relato sobre sus costumbres y saberes en torno a esta noche mágica. A través de su testimonio, nos acercamos a una ritualidad que permanece viva en los territorios y que continúa floreciendo entre los Pueblos Originarios del Valle de Elqui." },
+      { num:5, titulo:"⁠El revolcadero",     duracion:"3:17", descripcion:"En la alta cordillera, los caminos también guardan historias. Entre quebradas, cerros y huellas de animales, la memoria viaja de un lugar a otro a través de quienes conocen los senderos y saben escuchar lo que el territorio tiene para contar. Don Zoilo, cultor del Pueblo Colla, artesano, poeta y contrabandista de mensajes y recados que viajan entre quebradas y cerros, es portador de costumbres y saberes de la alta cordillera.  Sabedor de secretos y remedios que brotan desde las piedras, consejero y hombre de palabra, camina entre cerros tutelares compartiendo memorias, cantos y conocimientos de su pueblo. En esta ocasión, Don Zoilo comparte la historia del revolcadero de guanaco, un relato nacido en las huellas de la alta cordillera, donde la memoria, los cerros y los piños de animales se entrelazan con el caminar de los pueblos andinos." },
+      { num:6, titulo:"⁠Ojos de llama",             duracion:"3:23", descripcion:"El cielo nocturno también guarda historias que viajan con los pueblos. Las estrellas y las constelaciones acompañan los caminos, las memorias y las formas de comprender el mundo que cada pueblo lleva consigo. Lucha, cultora y educadora tradicional del Pueblo Quechua, habita desde hace algunos años en el Valle de Elqui, trayendo consigo saberes, recuerdos y formas de mirar el cielo que enriquecen este territorio. En esta ocasión, Lucha comparte la historia andina de la Llama en el cielo y nos muestra cómo esta antigua narrativa también encuentra su lugar y respira bajo los cielos estrellados de la noche elquina." },
     ];
 
     let capActual = 0;

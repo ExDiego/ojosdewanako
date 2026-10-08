@@ -466,7 +466,7 @@ a:hover {
    7. CABECERA DE PÁGINAS INTERIORES
    Usada en ojos-de-wanako.html, rio-de-arriba.html
    y en cualquier página interior que se cree en el futuro.
-   (El index usa .hero en su lugar.)
+   (El index(home) usa .hero en su lugar.)
 ================================================================ */
 .page-header {
   background: var(--bg-accent);
@@ -496,7 +496,7 @@ a:hover {
   margin-bottom: var(--space-sm);
 }
 
-.page-header__description {
+.page-header__description_title {
   font-size: var(--font-size-lg);
   font-weight: 300;
   max-width: 640px;
@@ -504,6 +504,49 @@ a:hover {
   color: var(--color-celeste);
   line-height: 1.8;
 }
+
+.page-header__description {
+  font-size: var(--font-size-sm);
+  font-weight: 300;
+  max-width: 640px;
+  margin: 0 auto;
+  color: var(--color-celeste);
+  line-height: 1.5;
+}
+
+.star_wanako {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.credits_title {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  max-width: 640px;
+  color: var(--color-azul-noche);
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+.credits_subtitle {
+  
+  font-size: var(--font-size-base);
+  font-weight: 1000;
+  color: var(--color-azul-noche);
+  line-height: 1.5;
+  margin-top: 10px;
+}
+
+.credits_text {
+  font-size: var(--font-size-sm);
+  font-weight: 400;
+  max-width: 640px;
+  color: var(--color-azul-mar);
+  line-height: 1.5;
+}
+
+
+
 
 /* Badges de accesibilidad — usados en rio-de-arriba */
 .a11y-badges {
@@ -737,6 +780,13 @@ body.high-contrast .a11y-note strong {
 .footer_detail {
   font-size: var(--font-size-xsm);
   font-style: italic;
+  font-weight: 200;
+}
+
+.footer_detail_t {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  
 }
 
 .footer__bottom a {
