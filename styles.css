@@ -394,7 +394,17 @@ a:hover {
    Aparece como dropdown bajo el header al hacer clic
 --------------------------------------------------------------- */
 .nav-menu {
-  display: none; /* oculto por defecto en TODOS los tamaños */
+  /* Animación del menú desplegable */
+  display: block;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-20px);
+  pointer-events: none;
+  transition:
+    opacity     220ms ease,
+    transform   900ms ease,
+    visibility  220ms ease;
+/*--------------------------------------------------------------*/
   position: absolute;
   top: calc(100% + 1px);
   right: 0;
@@ -410,7 +420,10 @@ a:hover {
 }
 
 .nav-menu.is-open {
-  display: block;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 
 .nav-menu li {
