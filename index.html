@@ -9,6 +9,7 @@
   <meta property="og:description" content="Tradición oral andina y el cielo nocturno. Arte visual, animación y saberes ancestrales.">
   <meta property="og:type" content="website">
 
+  <link rel="icon" href="./assets/img/favicon02.png" type="image/x-icon">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
@@ -24,19 +25,33 @@
     ============================================================ */
 
     /* HERO */
-    .hero {
-      background: var();
-      background-image: url("assets/img/poster_inicio04.jpg");
-      background-attachment: fixed;
-      background-repeat: no-repeat;
-      background-size: cover;
-      background-position: center;
-      color: var(--text-on-dark);
-      padding: var(--space-xl) var(--space-md);
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
+.hero {
+  background-color: #1f2a44;
+  background-image: url("assets/img/poster_inicio04.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  color: var(--text-on-dark);
+  padding: var(--space-xl) var(--space-md);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Celular: versión vertical centrada en el logo */
+@media (max-width: 899px) {
+  .hero {
+    background-image: url("assets/img/poster_inicio04-mobile.jpg");
+    background-position: center center;
+  }
+}
+
+/* Escritorio: mantiene el efecto de fondo fijo */
+@media (min-width: 900px) {
+  .hero {
+    background-attachment: fixed;
+  }
+}
 
     .hero::before {
       content: '';
@@ -187,10 +202,16 @@
 
   <header class="site-header" role="banner">
     <nav class="nav-container" aria-label="Navegación principal">
-      <a href="./" class="site-logo" aria-label="Ojos de Wanako - ir al inicio">
-        Ojos de wanako & Río de arriba 
+
+      <a href="./" class="site-logo">
+      <img src="./assets/img/logo2.svg" alt="Ojos de Wanako y Río de Arriba, ir al inicio" class="site-logo__img">
+      </a>
+
+  <!--     <a href="./" class="site-logo" aria-label="Ojos de Wanako - ir al inicio">
+        Ojos de wanako & </br> Río de arriba 
         <span>Saberes del territorio </br> para volver a mirar el cielo</span>
       </a>
+      <img src="./assets/img/logoojosdewanako-12.svg" class="logo-svg" > -->
 
       <button
         class="nav-toggle"

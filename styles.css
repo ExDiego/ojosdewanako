@@ -184,7 +184,7 @@ a:hover {
   top: -100%;
   left: var(--space-sm);
   z-index: 9999;
-  background: var(--color-dorado);
+  ground: var(--color-dorado);
   color: var(--color-azul-noche);
   font-family: var(--font-body);
   font-weight: 500;
@@ -296,6 +296,10 @@ a:hover {
 }
 
 /* Logo */
+
+.site-logo__img { height: 80px; width: auto; max-width: 100%; }
+@media (max-width: 600px) { .site-logo__img { height: 60px; } }
+
 .site-logo {
   font-family: var(--font-display);
   font-size: var(--font-size-xl);
